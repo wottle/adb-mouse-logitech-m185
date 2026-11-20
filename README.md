@@ -10,7 +10,9 @@ It is the third of a set, after the [Lisa mouse](https://github.com/wottle/lisa-
 and the [Macintosh mouse](https://github.com/wottle/mac-mouse-logitech-m185), and reuses the Lisa
 mouse's M185 mounting, power slider and battery door.
 
-![Render of the parts](images/preview.png)
+![Animation: the ADB mouse's parts coming together](images/animation.gif)
+
+*The printed parts coming apart and together (render; [10 s MP4, 720p](images/animation.mp4)).*
 
 > **Status: not yet printed.** Everything here is checked in the model only (parts against each
 > other and against stand-ins for the M185 parts, at rest and pressed). See [Known issues](#known-issues).
@@ -53,6 +55,8 @@ frame (X right, Y toward the buttons, Z up, underside at Z = 0).
 | `on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
 | `battery_cover_1.stl` | 1 | 14.7 × 53.1 × 8.9 | Battery door, main plate. Unchanged from the Lisa mouse. |
 | `battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
+
+![Render of the parts](images/preview.png)
 
 ## How the buttons work
 

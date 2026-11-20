@@ -90,6 +90,12 @@ Built 2026-11-19, **not printed**. Open items:
   buttons cap down).
 - No slicer project or photos yet.
 
+## Animation
+
+`images/animation.gif` (README, 640×360, 15 fps) and `images/animation.mp4` (1280×720, 30 fps, 10 s loop)
+are VTK renders of the assembled models: exploded, together, one full turn, apart again. They were rendered
+outside the repo (offscreen VTK through EGL, piped to ffmpeg); re-render them when the models change.
+
 ## Working conventions
 
 - **Mike runs git himself.** Leave changes uncommitted; give him the commands. Claude cannot push.
