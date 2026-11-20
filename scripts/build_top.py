@@ -138,8 +138,49 @@ def plate_bottom_F(x,y):
         else: lo=z
     return z
 SCREW_TOP=[(-20.5,42.155),(20.8,42.155),(-22.3,-43.145),(22.7,-43.145)]   # the upper shell's case-screw bosses
+EDGE_BEVEL=2.0                       # 45 degree bevel (legs, mm) in place of the rounding along the roof's side edges, so the upper
+                                     # prints on its side without supports there. The flat side below it (what rests on the bed)
+                                     # is then about 2.3 mm tall (1.85 with the rounding). Must not exceed the side's wall thickness.
+def roof_edge_z(t,x=22.5,ys=np.arange(-45,45.01,0.5)):
+    """top of the roof just inside the side edges (flat across x there), sampled along y; straight beyond |y| 45,
+    where the front and rear top edges round off"""
+    G=np.array([(s*x,y,80.0) for s in (-1,1) for y in ys]); loc,ri,_=t.ray.intersects_location(G,np.tile([0,0,-1.0],(len(G),1)),multiple_hits=False)
+    z=np.full(len(G),np.nan); z[ri]=loc[:,2]; z=np.nanmax(z.reshape(2,-1),axis=0)
+    yy=np.r_[-70,ys,70]; k0=(z[1]-z[0])/(ys[1]-ys[0]); k1=(z[-1]-z[-2])/(ys[-1]-ys[-2])
+    return yy,np.r_[z[0]+k0*(-70-ys[0]),z,z[-1]+k1*(70-ys[-1])]
+def edge_bevel_cutter(t):
+    """everything beyond the plane |x| + z = SIDE_W - EDGE_BEVEL + roof(y), on both sides"""
+    yy,zz=roof_edge_z(t); r2=math.sqrt(2)
+    K=(SIDE_W-EDGE_BEVEL+zz)/r2                                     # in (p, y), p = (x + z)/sqrt2 for the right side
+    poly=([(k,y) for k,y in zip(K,yy)]+[(80,yy[-1]),(80,yy[0])])[::-1]     # counter-clockwise
+    C=Manifold.extrude(CrossSection([poly]),120).translate([0,0,-60])  # X = p, Y = y, Z = q = (z - x)/sqrt2
+    C=C.transform(np.array([[1/r2,0,-1/r2,0],[0,1,0,0],[1/r2,0,1/r2,0]]))
+    return C+C.mirror([1,0,0])
+EDGE_X=22.5                          # the side edges are rebuilt outboard of this |x| (roof flat across x from the window to 25)
+EDGE_DEPTH=2.6                       # ...down to this far below the roof surface (the rounding starts 2.4 down; skin 2.79)
+EDGE_INSET=0.03                      # the fill stays this far under the roof and inside the plan's corners (no coincident faces)
+EDGE_STRAIGHT_Y=44.0                 # the plan's sides are straight to |y| 45.2 (corner radius about 4)
+def yz_extrude(poly_yz,x0,x1):
+    """a (y, z) polygon extruded along x from x0 to x1"""
+    p=np.asarray(poly_yz); a=0.5*np.sum(p[:,0]*np.roll(p[:,1],-1)-np.roll(p[:,0],-1)*p[:,1])
+    if a<0: p=p[::-1]
+    M=Manifold.extrude(CrossSection([[(z,y) for y,z in p][::-1]]),x1-x0)   # X' = z, Y' = y, extruded along Z'
+    return M.transform(np.array([[0,0,1.0,x0],[0,1.0,0,0],[1.0,0,0,0]]))
+def edge_fill(t,H):
+    """material that squares off the side edges: the roof's front-to-back profile (the hull at |x| = EDGE_X) carried out
+    past the sides, inside the plan's rounded corners, within EDGE_DEPTH of the roof. The side plane and the bevel are cut
+    afterwards."""
+    g=xs_to_shapely(H.rotate([0,90,0]).slice(-EDGE_X)); g=max((g.geoms if hasattr(g,'geoms') else [g]),key=lambda q:q.area)
+    g=sg.Polygon([(y,z) for z,y in np.asarray(g.exterior.coords)]).buffer(-EDGE_INSET,join_style=1)   # slice coords are (z, y)
+    prof=list(np.asarray(g.exterior.coords)[:-1])
+    E=yz_extrude(prof,-SIDE_W-1,SIDE_W+1)
+    plan=xs_to_shapely(H.project()).buffer(-EDGE_INSET,join_style=1).union(sg.box(-SIDE_W-1,-EDGE_STRAIGHT_Y,SIDE_W+1,EDGE_STRAIGHT_Y))
+    E=E^prism(plan.simplify(0.005),-5,55)                                    # simplified: no near-duplicate vertices
+    yy,zz=roof_edge_z(t); zone=yz_extrude([(y,z-EDGE_DEPTH) for y,z in zip(yy,zz)]+[(yy[-1],80),(yy[0],80)],EDGE_X,40)
+    return E^(zone+zone.mirror([1,0,0]))
 def upper_shell():
-    U=to_man(tm_adb('upper'))
+    t=tm_adb('upper'); U=to_man(t); H=to_man(t.convex_hull)
+    U=((U+edge_fill(t,H))-edge_bevel_cutter(t))^box(-SIDE_W,SIDE_W,-60,60,-5,60)   # flat sides up to a 45 deg bevel: no supports
     for x,y in SCREW_TOP: U=U-cyl(x,y,5.0,17.0,1.35)                       # M3 pilot (was 2.5)
     # old cable ribs hanging below the front of the roof (anything below the ceiling between the window and the front wall)
     n=np.array([0,-ROOF_A,1.0]); Ln=np.linalg.norm(n)

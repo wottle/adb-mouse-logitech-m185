@@ -36,8 +36,48 @@ SKIN=2.79                       # roof thickness
 def roof(y): return ROOF_A*y+ROOF_C
 def ceil(y): return roof(y)-SKIN
 
-def tm_adb(name):
-    m=trimesh.load(ADBF[name],force='mesh'); m.apply_transform(T_ADB); m.merge_vertices(digits_vertex=5); return m
+# --- parallel sides ---------------------------------------------------------------------------------
+# The source's sides lean in (draft, 0.033 mm per mm of height) and taper in plan (1.2 mm per side narrower at
+# the front). Printed on its side, the upward side then steps from layer to layer. parallel_sides() moves the
+# outer skin of the source shells sideways so both sides become the vertical planes |x| = SIDE_W.
+# The move ramps up across RAMP_X, where everything it touches is flat across x (the roof, the front and rear
+# faces), so it only stretches those surfaces; beyond RAMP_X the corners and the roof's edge rounding move as a
+# block. Only the outer skin moves (vertices within 0.3 of the convex hull), so inner faces, bosses and the
+# window stay put. Both shells get the same treatment, so they still meet flush at the seam.
+SIDE_W=28.5                     # half-width of the sides. The source runs 26.0 (front, bottom) to 28.9 (rear, top);
+                                # 28.5 keeps 0.6 mm of floor outside the battery door opening (x 26.9) under the bevel,
+                                # and takes at most 0.4 mm off the walls at the rear
+SIDE_SEED=(27.141,-0.0243,0.0329)  # starting guess for the side planes, |x| = a + b*y + c*z (the source lower, by ray fit)
+RAMP_X=(22.0,24.2)              # the move ramps up across this |x| (logo ends at 21.5; corners and edge rounding start at 24.5)
+PARALLEL_FIT={}
+def parallel_sides(m,name):
+    m.metadata['name']=name
+    h=m.convex_hull; up=1 if name=='lower' else -1                 # the open face: top of the lower, bottom of the upper
+    keep=np.where(up*h.face_normals[:,2]<0.3)[0]
+    _,d,_=trimesh.proximity.closest_point(h.submesh([keep],append=True),m.vertices)
+    V=m.vertices.copy(); x,y,z=V[:,0],V[:,1],V[:,2]; s=np.where(x<0,-1.0,1.0)
+    u=np.clip((np.abs(x)-RAMP_X[0])/(RAMP_X[1]-RAMP_X[0]),0,1); g=u*u*(3-2*u)
+    mv=(d<0.3)&(g>0)
+    side=np.zeros(len(V),bool)                                      # vertices of the side faces (normal within 6 deg of +-x)
+    fs=np.where(np.abs(m.face_normals[:,0])>0.995)[0]; side[m.faces[fs].ravel()]=True
+    side&=mv&(g==1)
+    w=np.zeros(len(V))                                              # each side's own plane, |x| = a + b*y + c*z (the source
+    for k_ in (-1,1):                                               # upper is 0.165 off-centre and a little narrower)
+        a0,b0,c0=SIDE_SEED; k=side&(s==k_)&(np.abs(np.abs(x)-(a0+b0*y+c0*z))<0.4)
+        for _ in range(5):                                          # robust: refit without stray side-facing faces
+            A=np.c_[np.ones(k.sum()),y[k],z[k]]; co,*_=np.linalg.lstsq(A,np.abs(x[k]),rcond=None)
+            r=np.abs(x)-(co[0]+co[1]*y+co[2]*z); k=side&(s==k_)&(np.abs(r)<0.05)
+        side[(s==k_)&~k]=False
+        w[s==k_]=co[0]+co[1]*y[s==k_]+co[2]*z[s==k_]
+        PARALLEL_FIT[(m.metadata.get('name'),k_)]=(co,k.sum())
+    V[mv,0]=x[mv]+s[mv]*(SIDE_W-w[mv])*g[mv]
+    V[side,0]=s[side]*SIDE_W                                       # the side faces themselves: exactly on the plane
+    V[:,0]=np.clip(V[:,0],-SIDE_W,SIDE_W)                          # and nothing proud of it (corner vertices up to 0.03 out)
+    m.vertices=V; return m
+def tm_adb(name,parallel=True):
+    m=trimesh.load(ADBF[name],force='mesh'); m.apply_transform(T_ADB); m.merge_vertices(digits_vertex=5)
+    if parallel and name in ('upper','lower'): m=parallel_sides(m,name)
+    return m
 def to_man(m):
     M=Manifold(Mesh(vert_properties=np.asarray(m.vertices,dtype=np.float32),tri_verts=np.asarray(m.faces,dtype=np.uint32)))
     assert M.status()==mf.Error.NoError, M.status(); return M

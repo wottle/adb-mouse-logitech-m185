@@ -25,12 +25,16 @@ Flat underside on the bed. Supports only where the slicer insists inside the M18
 the Lisa mouse's base.
 
 ### Upper shell
-Either way works:
-- **On its side** (as for the Macintosh mouse) gives the best finish on the top. The window then
-  prints with one jamb as an overhang, which may sag a little; the caps have 0.6 mm of clearance to
-  allow for it.
-- **As modelled**, rim down and top up, with tree supports under the inside of the roof. The outside
-  needs no supports, but the top shows its layer steps.
+**On its side** (either side down) gives the best finish on the top, and the shell is shaped for it:
+- the sides are flat and parallel, so the side facing up has no layer banding;
+- the side on the bed is a flat strip about 2.3 mm tall, topped by a 45° bevel instead of a curve, so
+  the outside needs no supports (apart from a few mm² where the bevel meets the rounded corners);
+- inside, the case-screw and button-clamp bosses still need supports;
+- the window prints with one jamb as an overhang, which may sag a little; the caps have 0.6 mm of
+  clearance to allow for it.
+
+It also prints **as modelled**, rim down and top up, with tree supports under the inside of the roof;
+the outside then needs no supports, but the top shows its layer steps.
 
 ### Buttons
 There are two pairs; print one:

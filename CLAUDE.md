@@ -16,7 +16,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 | Path | What |
 |------|------|
 | `models/` | Print-ready STLs, generated. The new parts are in assembled position (frame F). Two button pairs: standard and `_short` (taller nubs). |
-| `scripts/geo.py` | Frames, board placement (`BOARD_X`, `BOARD_Y`), roof plane, CSG helpers, `clean_export`. |
+| `scripts/geo.py` | Frames, board placement (`BOARD_X`, `BOARD_Y`), roof plane, CSG helpers, `clean_export`; `tm_adb` loads the source shells with `parallel_sides` applied. |
 | `scripts/fits.py` | Stand-ins for the M185 parts, defined in the Lisa base frame. |
 | `scripts/lisa_solid.py` | Rebuilds the Lisa base as a clean solid in `build/` (run once). |
 | `scripts/build_lower.py` | Lower shell. |
@@ -47,12 +47,29 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 
 ## Design and why
 
+**Parallel sides** (`geo.parallel_sides`, applied when `tm_adb` loads the source shells, so everything downstream
+follows): the source sides lean in (0.033 per mm of height) and taper (narrower at the front); printed on its side the
+upward side banded. The outer skin (vertices within 0.3 of the convex hull, open face excluded) moves sideways by
+`SIDE_W` − (that side's own fitted plane), ramped in across `RAMP_X` 22.0–24.2 where the roof and the front/rear faces are
+flat across x (so they only stretch); beyond it the corners and roof edge move as a block. Side-face vertices snap to
+exactly ±`SIDE_W` 28.5. Inner faces, bosses, the window and the logo (to x 21.5) don't move; the inside within 21.9 of
+the centreline is unchanged. This also removed the source upper's 0.165 offset step at the seam. `SIDE_W` is set by the
+battery door opening (x 26.9): 0.6 floor outside it under the bevel (now 1.6); rear walls lose at most 0.4.
+
 **Lower shell** (`build_lower.py`): ADB outline, flat bottom with a 1 mm 45° bevel (not 3 mm as on the
 Mac: the Lisa battery door opening reaches x = 26.2 on the right), interior stripped above
 `FLOOR_CUT`, Lisa base floor and features inside, corner posts with conical countersinks, PCB front
 standoff (same board position as the Lisa v2 and Mac), cable slot closed, Lisa features trimmed to
 `LISA_TOP` 17.6 (bay walls stood 18.15, 0.12 under the right plate). Battery door, sensor and on/off
 openings are identical to the Lisa base, so the Lisa door and slider fit.
+
+**Upper edge bevel** (`build_top.upper_shell`, `edge_fill`, `edge_bevel_cutter`): the roof-to-side rounding (2.4 tall) is
+replaced by a flat side up to `EDGE_BEVEL` 2.0 below the roof, then 45° to the roof, so the upper prints on its side with
+no supports outside (flat strip 1.9 → 2.3). Built as fill + cuts, no coincident faces: the hull's yz profile at
+|x| = `EDGE_X` 22.5, shrunk `EDGE_INSET` 0.03, extruded across x, kept inside the plan outline (hull projection −0.03, in
+shapely, simplified: the raw CrossSection offset left near-duplicate vertices that broke the STL) and within
+`EDGE_DEPTH` 2.6 of the roof; then the bevel is cut and the whole shell trimmed to |x| ≤ `SIDE_W`. Remaining outside
+overhang > 45° with a side on the bed: about 25 mm² (corner ends, window radii, logo). Wall behind the bevel ≥ 2.9.
 
 **Buttons** (`build_top.py`): flexure, not pins.
 - Cap in its half of the window (`CAP_CLEAR` 0.6, 0.8 slot), on a 2 mm plate under the skin. Its top is a
@@ -109,9 +126,12 @@ Built 2026-11-19. **Printed 2026-11-20**: prints well, clicks work well (stop sc
 
 Open items:
 - Print the `_short` buttons: click point right? Free in the window? (Tune `NUB_GAP_SHORT`, `CAP_CLEAR`.)
+- Print the parallel-sided, bevelled shells (2026-11-20, not printed): upper on its side, check the bed strip holds and
+  the bevel needs no support; check the battery door still fits (its opening is unchanged).
 - Whether the stop screws earn their place, or can go (the click was good without them).
 - Print orientation: lower flat, upper on its side (or as modelled with roof supports), buttons cap down.
-- No slicer project or photos yet.
+- Slicer project: `print/adb_mouse_m185_creality_k2_plus.3mf` (Mike's, Creality K2 Plus); made before the parallel
+  sides and bevel, so re-slice the shells. No photos yet.
 
 ## Animation
 

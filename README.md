@@ -48,8 +48,8 @@ frame (X right, Y toward the buttons, Z up, underside at Z = 0).
 
 | File | Qty | Size (mm) | Purpose |
 |------|:---:|-----------|---------|
-| `lower_shell.stl` | 1 | 57.4 × 98.5 × 24.2 | Bottom shell. ADB outline with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
-| `upper_shell.stl` | 1 | 57.4 × 98.5 × 23.5 | Top shell. The original form and button window; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
+| `lower_shell.stl` | 1 | 57.0 × 98.5 × 24.2 | Bottom shell. ADB outline (with parallel sides) with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
+| `upper_shell.stl` | 1 | 57.0 × 98.5 × 23.5 | Top shell. The original form and button window, with parallel sides and 45° bevels along the top side edges; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
 | `button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Longer click**: a little free travel before the click. |
 | `button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, longer click. |
 | `button_left_short.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **shorter click**: nub 0.25 mm taller, so it clicks about 0.5 mm sooner at the front edge. Print this pair *or* the pair above. |
@@ -94,6 +94,10 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
 - No cable: the cable slot in the front wall is closed.
 - The underside is flat, without the ball opening and feet.
 - The case screws are in the original four corners, now M3.
+- The sides are flat, vertical and parallel, 57.0 mm apart. The original's lean in slightly and narrow
+  toward the front (52–57 mm); parallel sides print without banding when a shell lies on its side.
+- The top's side edges are a 2 mm 45° bevel instead of a curve, so the top prints on its side without
+  supports on the outside.
 
 ## Known issues
 
