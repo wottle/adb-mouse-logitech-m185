@@ -11,7 +11,16 @@ import shutil, itertools
 from build_lower import build_lower, BEVEL
 from build_top import *
 MODELS=os.path.join(ROOT,'models')
-CARRIED=('battery_cover_1','battery_cover_2','on_off_button')   # from the Lisa mouse project, unchanged
+CARRIED=('battery_cover_2','on_off_button')   # from the Lisa mouse project, unchanged
+BATTERY_SUPPORT_DROP=1.2         # battery_cover_1 is the Lisa door's main plate with the saddle that holds the cell lowered this much:
+                                 # with a cell in, the Lisa door stood about 1.2 mm proud of the underside (Mike, first print)
+def battery_cover_1():
+    """the Lisa door's main plate (print orientation, as in source/lisa) with its battery saddle lowered. Everything above
+    z 5.0 is the saddle block's top (the rest of the door is 5.0 or lower; the block's walls run straight from 2.0), so its
+    vertices move down and the walls just get shorter."""
+    t=trimesh.load(os.path.join(SRC,'lisa','battery_cover_1.stl'),force='mesh'); V=t.vertices.copy()
+    top=V[:,2]>5.5; assert V[top,2].min()-BATTERY_SUPPORT_DROP>5.0
+    V[top,2]-=BATTERY_SUPPORT_DROP; t.vertices=V; return t
 def gap(a,b,cap=3.0):
     return 0.0 if (a^b).volume()>1e-4 else a.min_gap(b,cap)
 def check(lo,U,L,R,verbose=True,nub_gap=NUB_GAP):
@@ -52,6 +61,8 @@ if __name__=='__main__':
     for n,M in (('lower_shell',lo),('upper_shell',U),('button_left',L),('button_right',R),
                 ('button_left_short',Ls),('button_right_short',Rs)):
         t=clean_export(M,os.path.join(MODELS,n+'.stl')); print(f'  {n:13s} {len(t.faces):7d} tris  size {np.round(t.extents,1)}')
+    t=battery_cover_1(); t.export(os.path.join(MODELS,'battery_cover_1.stl'))
+    print(f'  battery_cover_1  saddle lowered {BATTERY_SUPPORT_DROP} mm  size {np.round(t.extents,2)}  watertight {t.is_watertight}')
     for n in CARRIED:
         src=os.path.join(SRC,'lisa',n+'.stl')
         if os.path.exists(src): shutil.copy(src,os.path.join(MODELS,n+'.stl'))

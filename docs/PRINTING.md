@@ -56,6 +56,8 @@ PETG is an alternative if you prefer.
 
 ### Battery door and power slider
 As for the Lisa mouse (see its [PRINTING.md](https://github.com/wottle/lisa-mouse-logitech-m185/blob/main/docs/PRINTING.md)).
+Print this repo's `battery_cover_1.stl`: its battery saddle is 1.2 mm lower than the Lisa mouse's,
+for this mouse's lower profile.
 
 ## Fit
 

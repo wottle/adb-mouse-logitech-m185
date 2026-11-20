@@ -182,9 +182,7 @@ def upper_shell():
     t=tm_adb('upper'); U=to_man(t); H=to_man(t.convex_hull)
     U=((U+edge_fill(t,H))-edge_bevel_cutter(t))^box(-SIDE_W,SIDE_W,-60,60,-5,60)   # flat sides up to a 45 deg bevel: no supports
     for x,y in SCREW_TOP: U=U-cyl(x,y,5.0,17.0,1.35)                       # M3 pilot (was 2.5)
-    # old cable ribs hanging below the front of the roof (anything below the ceiling between the window and the front wall)
-    n=np.array([0,-ROOF_A,1.0]); Ln=np.linalg.norm(n)
-    U=U-box(-12,12,38.5,46.45,0,40).trim_by_plane(list(-n),-(ROOF_C-SKIN-0.01)/Ln)
+    U=U-cable_ribs_cut()                                                       # the old cable-clamp ribs at the front
     # the original button's mount (pins and ribs under the roof), anywhere over the new plates
     U=U-fromR(box(-23.5,23.5,-14.0/CT,38.0/CT,-30,-SKIN-0.01))
     above=fromR(half_plane(False))                                          # everything above the plates' top plane

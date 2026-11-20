@@ -24,7 +24,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 | `scripts/build_models.py` | Runs everything, exports `models/`, runs the fit checks. |
 | `scripts/sections.py` | `images/sections.png` (2D side sections). `render.py` is the splat renderer. |
 | `source/adb/` | StephenLulz's G5431 model (CC BY-NC-SA, tracked). Files are named `G4351` as downloaded. |
-| `source/lisa/` | Lisa v1 base + battery door + power slider. |
+| `source/lisa/` | Lisa v1 base + battery door + power slider (`models/battery_cover_1.stl` is generated from it, lower). |
 
 ## Frames and key numbers
 
@@ -61,7 +61,22 @@ Mac: the Lisa battery door opening reaches x = 26.2 on the right), interior stri
 `FLOOR_CUT`, Lisa base floor and features inside, corner posts with conical countersinks, PCB front
 standoff (same board position as the Lisa v2 and Mac), cable slot closed, Lisa features trimmed to
 `LISA_TOP` 17.6 (bay walls stood 18.15, 0.12 under the right plate). Battery door, sensor and on/off
-openings are identical to the Lisa base, so the Lisa door and slider fit.
+openings are identical to the Lisa base, so the Lisa door and slider fit the openings.
+
+**Battery door: lower profile.** This shell is lower than the Lisa's, so the cell has less room above it: with a cell
+in, the Lisa door stood about 1.2 mm proud (first print). `build_models.battery_cover_1()` makes the door's main plate
+from `source/lisa/battery_cover_1.stl` with its battery saddle lowered `BATTERY_SUPPORT_DROP` 1.2: everything above
+z 5.0 (print orientation) is the saddle block's top, so those vertices move down and its straight walls shorten. The
+latch piece and the power slider are still copied unchanged (`CARRIED`). Seated in the Lisa base's opening the door
+overlaps nothing (checked by matching its plate to the opening's 52.5 × 14.9 step at z 1.5–2).
+
+**Battery bay = Lisa base** (`BAY_MARGIN`, `DOOR_MARGIN`, `WALL_MIN` in `build_lower.py`): within 3 mm of the cell and
+1 mm of the door opening (and at least 2.2 in from the outside) everything above the floor is the Lisa base. A block of
+the original ADB internals on the right wall had survived there (the interior ring wraps round wall-attached features),
+leaving a tab in the bay at x 21.6–24.1, y −3.5 to −2.1, and clipping about 8 mm³ of the Lisa bay walls at the cell's +
+end. Mike found the door seats without a cell either way; removed anyway as a stray. The cable-slot closing fill (z 5.3–5.85,
+all of `Oi` outside the interior) must skip the bay too, or it puts a sliver of the tab back. Check: lower minus the Lisa base
+in the bay zone above the floor is under 0.03 mm³.
 
 **Upper edge bevel** (`build_top.upper_shell`, `edge_fill`, `edge_bevel_cutter`): the roof-to-side rounding (2.4 tall) is
 replaced by a flat side up to `EDGE_BEVEL` 2.0 below the roof, then 45° to the roof, so the upper prints on its side with
@@ -99,6 +114,10 @@ overhang > 45° with a side on the bed: about 25 mm² (corner ends, window radii
   photo-estimate box was too tall). Both boxes are kept as `fits.removed` and are not checked.
 - The upper shell's original button mount (pins at x ±21 and on the centreline at the hinge line, two
   ribs) and the cable ribs at the front are removed.
+  The cable ribs (x ±7.8, 1.5 wide) go via `geo.cable_ribs_cut()`, used by both shells: the first cut stopped at the
+  front wall's inside face (y 46.45) and left two 0.11 mm fins hanging below the front rim (z 6.4–11.5), and the lower's
+  print-tolerance cut (made from the source upper) had notched its front wall for them. Cut below `FRONT_RIM_Z` 11.5,
+  under the front lip (11.53).
 
 ## Checks
 

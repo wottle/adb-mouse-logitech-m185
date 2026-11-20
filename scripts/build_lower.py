@@ -13,6 +13,11 @@ POST_R=3.6
 LISA_TOP=17.6                    # Lisa features are cut to this height (the battery bay walls stood 18.15, 0.12 under
                                  # the right button's plate; the cell's top is 16.5)
 CABLE_TOP=12.4                   # top of the lower shell's front wall at the cable slot
+BAY_MARGIN=3.0                   # round the AA cell (plan) and ...
+DOOR_MARGIN=1.0                  # ... round the battery door opening, the lower shell is exactly the Lisa base from the floor up:
+                                 # a block of the original ADB internals on the right wall survived there (a tab that stopped
+                                 # the Lisa door seating) and clipped some of the Lisa bay walls
+WALL_MIN=2.2                     # that zone stays this far inside the outside, so the ADB's side walls stay whole
 # PCB front hold-down in the scroll-wheel cutout (same place on the board as on the Lisa v2 and Macintosh mice)
 ST_B=(-3.0,45.18); PCB_SEAT=8.05+DZ
 def outline(m,z):
@@ -30,16 +35,19 @@ def build_lower(verbose=True):
     lo=lo+(bev^prism(Oi.buffer(BEVEL),-1,ZT))+prism(Oi,BEVEL,ZT)
     lo=lo-(box(-60,60,-60,60,-5,BEVEL)-bev)
     # --- strip the ball-mouse internals, keep the walls
-    lo=lo-prism(interior,FLOOR_CUT,45)
+    L=to_man(trimesh.load(LISA_SOLID,force='mesh')).translate([DX,DY,DZ])
+    door=max([sg.Polygon(h) for p in (lambda g:(g.geoms if hasattr(g,'geoms') else [g]))(xs_to_shapely(L.slice(1.75))) for h in p.interiors],key=lambda q:q.area)
+    cell=xs_to_shapely(prox['AA'].project())
+    bay=cell.buffer(BAY_MARGIN).union(door.buffer(DOOR_MARGIN)).intersection(O.buffer(-WALL_MIN))   # Lisa base wins here
+    lo=lo-prism(interior.union(bay),FLOOR_CUT,45)
     # front wall: close the cable slot (5 mm wide, z 6..12, centre of the front wall) to the wall's outside contour
-    lo=lo+(prism(Oi,ZT-0.2,SEAM-0.05)-prism(interior,-1,50))
+    lo=lo+(prism(Oi,ZT-0.2,SEAM-0.05)-prism(interior.union(bay),-1,50))   # (not in the bay: it put a sliver of the tab back)
     front=(to_man(t)^box(-12,12,40,50,4.0,CABLE_TOP)).hull()
     lo=lo+((front^box(-4,4,40,50,4.0,CABLE_TOP))-prism(interior,-1,50))
     # --- M185 mounting from the Lisa base
-    L=to_man(trimesh.load(LISA_SOLID,force='mesh')).translate([DX,DY,DZ])
     lisa_fp=outline(to_tm(L),0.3)
     R_int=sg.Polygon(lisa_fp.exterior).buffer(-1.0).intersection(O.buffer(-BEVEL-0.3))     # where the Lisa floor replaces ours
-    R_all=sg.box(*B2F(-27.35,-32.7),*B2F(27.2,48.4)).intersection(interior.buffer(-0.15))   # Lisa features kept above the floor
+    R_all=sg.box(*B2F(-27.35,-32.7),*B2F(27.2,48.4)).intersection(interior.buffer(-0.15).union(bay))   # Lisa features kept above the floor
     Lmod=L^(prism(R_all,FLOOR_CUT,45)+prism(R_int,-5,FLOOR_CUT))
     lo=lo-prism(R_int,-5,FLOOR_CUT)
     lo=lo+Lmod
@@ -59,11 +67,11 @@ def build_lower(verbose=True):
     for x,y in SCREW:
         lo=lo-cyl(x,y,-1,SEAM+1,1.65)-cyl(x,y,-1,0.3,3.15)-cyl(x,y,0.299,1.8,3.15,1.65)
     # print tolerance against the upper shell where they meet
-    up=to_man(tm_adb('upper'))
+    up=to_man(tm_adb('upper'))-cable_ribs_cut()                     # (no notches for the removed cable ribs)
     for dx,dy in ((0.15,0),(-0.15,0),(0,0.15),(0,-0.15)): lo=lo-up.translate([dx,dy,0])
     lo=max(lo.decompose(),key=lambda d:d.volume())
     if verbose: print(f'lower shell: volume {lo.volume():.0f} mm3, bounds {np.round(lo.bounding_box(),2)}')
-    return lo,dict(O=O,interior=interior,R_int=R_int,R_all=R_all,Lmod=Lmod)
+    return lo,dict(O=O,interior=interior,R_int=R_int,R_all=R_all,Lmod=Lmod,bay=bay)
 if __name__=='__main__':
     lo,info=build_lower()
     clean_export(lo,os.path.join(BUILD,'lower_shell.stl'))

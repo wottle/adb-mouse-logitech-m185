@@ -85,6 +85,10 @@ Insert the AA cell, pushing it against the spring at the negative end first so t
 wire isn't pushed out of place (see step 15 of the Lisa guide). Assemble the battery door from
 `battery_cover_1.stl` and `battery_cover_2.stl`, fit it and latch it.
 
+Use this repo's `battery_cover_1.stl`, not the Lisa mouse's: this mouse is lower-profile, so its door
+has a battery saddle 1.2 mm lower. The Lisa door fits the opening but stands about 1.2 mm proud once a
+cell is in.
+
 ## Troubleshooting
 
 See the Lisa mouse guide's troubleshooting section: the battery contact wire and counterfeit boards

@@ -35,6 +35,13 @@ ROOF_A,ROOF_C=-0.1760,26.711    # outer roof z = ROOF_A*y + ROOF_C
 SKIN=2.79                       # roof thickness
 def roof(y): return ROOF_A*y+ROOF_C
 def ceil(y): return roof(y)-SKIN
+FRONT_RIM_Z=11.5                # just under the upper shell's front lip (11.53) and rim (11.64)
+def cable_ribs_cut():
+    """the source upper's two cable-clamp ribs (x about +-7.8, 1.5 wide): everything under the ceiling between the window
+    and the front wall, and everything below the front rim. A cut that stopped at the front wall's inside face (y 46.45)
+    left their last 0.11 mm hanging below the rim as two thin fins."""
+    n=np.array([0,-ROOF_A,1.0]); Ln=np.linalg.norm(n)
+    return box(-12,12,38.5,46.45,0,40).trim_by_plane(list(-n),-(ROOF_C-SKIN-0.01)/Ln)+box(-12,12,38.5,50,0,FRONT_RIM_Z)
 
 # --- parallel sides ---------------------------------------------------------------------------------
 # The source's sides lean in (draft, 0.033 mm per mm of height) and taper in plan (1.2 mm per side narrower at
