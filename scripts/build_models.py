@@ -67,8 +67,8 @@ if __name__=='__main__':
     for sub,fdm in VARIANTS:
         lo,_=build_lower(fdm=fdm); U,L,R=build_top(fdm=fdm); shells[sub]=(lo,U)
         export(lo,sub,'lower_shell'); export(U,sub,'upper_shell')
-    Ls=button(-1,U,NUB_GAP_SHORT); Rs=button(1,U,NUB_GAP_SHORT)                 # short-click variants (the buttons don't
-    for n,M in (('button_left',L),('button_right',R),('button_left_short',Ls),('button_right_short',Rs)):   # depend on the shells' outsides)
+    Ll=button(-1,U,NUB_GAP_LONG); Rl=button(1,U,NUB_GAP_LONG)                   # long-throw variants (the buttons don't
+    for n,M in (('button_left',L),('button_right',R),('button_left_long',Ll),('button_right_long',Rl)):   # depend on the shells' outsides)
         export(M,'common',n)
     t=battery_cover_1(); t.export(os.path.join(MODELS,'common','battery_cover_1.stl'))
     print(f'  common/battery_cover_1  saddle lowered {BATTERY_SUPPORT_DROP} mm  size {np.round(t.extents,2)}  watertight {t.is_watertight}')
@@ -76,6 +76,6 @@ if __name__=='__main__':
         src=os.path.join(SRC,'lisa',n+'.stl')
         if os.path.exists(src): shutil.copy(src,os.path.join(MODELS,'common',n+'.stl'))
     for sub,(lo,U) in shells.items():
-        print(f'===== {sub} shells, standard buttons'); bad+=check(lo,U,L,R)
-        print(f'===== {sub} shells, short-click buttons (nub gap %.2f)'%NUB_GAP_SHORT); bad+=check(lo,U,Ls,Rs,nub_gap=NUB_GAP_SHORT)
+        print(f'===== {sub} shells, default (short-throw) buttons'); bad+=check(lo,U,L,R)
+        print(f'===== {sub} shells, long-throw buttons (nub gap %.2f)'%NUB_GAP_LONG); bad+=check(lo,U,Ll,Rl,nub_gap=NUB_GAP_LONG)
     print('problems:',bad)

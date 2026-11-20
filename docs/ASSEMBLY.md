@@ -57,10 +57,10 @@ switch. With the head seated against the boss the screw is at its limit (about 0
 
 Rest the upper shell on the lower shell (or put in two corner screws loosely) and press each button.
 
-If the click comes too late with the stop screws out, print the **short-click buttons**
-(`button_left_short.stl`, `button_right_short.stl`; see [PRINTING.md](PRINTING.md)) rather than
-screwing the stop screws in: the screws shorten the travel by lowering the button, so its front no
-longer sits flush. Use the stop screws for small trims:
+The default buttons click almost as soon as you press, and usually need no stop screws. If you want
+a more deliberate press, print the **longer-throw buttons** (`button_left_long.stl`,
+`button_right_long.stl`; see [PRINTING.md](PRINTING.md)). The stop screws are for small trims; they
+shorten the travel by lowering the button, so its front no longer sits quite flush:
 
 - **Free play before the click:** open up and turn that button's stop screw **in** half a turn.
 - **No click at all, or the button feels stuck down:** turn it **out** half a turn.
@@ -68,12 +68,8 @@ longer sits flush. Use the stop screws for small trims:
 Repeat until each button clicks with no free play and no pre-click. Expect about one turn in from
 where you started. Judge it with the case closed, as on the Lisa and Macintosh mice.
 
-The stop screws are optional. Without them each button rests where its hinge holds it, and the nub
-clicks the switch after a little free travel. If the buttons click well that way, leave them out.
-
-If the left button rubs or will not return no matter how the stop screw is set, check whether the
-middle-click switch is touching the underside of the cap. It isn't needed for a two-button mouse;
-desolder it.
+The stop screws are optional. Without them each button rests where its hinge holds it. If the
+buttons click well that way, leave them out.
 
 ## 6. Close the case
 

@@ -46,11 +46,11 @@ There are two pairs; print one:
 
 | Pair | Files | Click |
 |------|-------|-------|
-| Longer click | `button_left.stl`, `button_right.stl` | Some free travel before the click (about 0.5 mm at the front edge of the cap, plus the switch's own travel). |
-| Shorter click | `button_left_short.stl`, `button_right_short.stl` | The nubs are 0.25 mm taller and start on the switches, so the click comes about 0.5 mm sooner. |
+| Short throw (default) | `button_left.stl`, `button_right.stl` | The nubs start on the switches, so the click comes almost as soon as you press. |
+| Longer throw | `button_left_long.stl`, `button_right_long.stl` | The nubs are 0.25 mm shorter: about 0.5 mm more travel at the front edge of the cap before the click, for a more deliberate press. |
 
-They are otherwise identical. If you're unsure, start with the shorter click; if a button feels held
-down or won't click back, use the longer one (or that one button from the other pair).
+They are otherwise identical. Print the default pair unless you want each press to be more deliberate.
+If a default button feels held down or won't click back on your board, use the longer-throw one.
 
 Cap face down on the bed, with supports under the plate around the cap. The cap top is the visible
 surface and gets the first-layer finish. The thin hinge strip (0.8 mm) then prints flat, in four

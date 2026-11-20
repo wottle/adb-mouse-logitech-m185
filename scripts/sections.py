@@ -34,5 +34,5 @@ if __name__=='__main__':
     draw_xz(axes[1],SW_L[1],f'across the switches (y = {SW_L[1]:.1f}), from the front: caps {CAP_CLEAR} mm from the window, nubs r {NUB_R} over the plungers',
             xlim=(-32,32),ylim=(6,28))
     draw(axes[2],9.0,'right stop screw (x = 9.0): boss under the plate front, tip bears on the roof just ahead of the window',xlim=(25,50),ylim=(5,25))
-    draw(axes[3],SW_L[0],'left switch, close up: nub 0.25 above the plunger at rest',xlim=(10,32),ylim=(12,24))
+    draw(axes[3],SW_L[0],f'left switch, close up: default button, nub {NUB_GAP} above the plunger at rest (long-throw: {NUB_GAP_LONG})',xlim=(10,32),ylim=(12,24))
     plt.tight_layout(); plt.savefig(sys.argv[1] if len(sys.argv)>1 else os.path.join(ROOT,'images','sections.png'),dpi=105)

@@ -59,12 +59,12 @@ position in one common frame (X right, Y toward the buttons, Z up, underside at 
 |------|:---:|-----------|---------|
 | `fdm/lower_shell.stl` or `resin/lower_shell.stl` | 1 | 57.0 × 98.5 × 24.2 (resin: 57.4 wide) | Bottom shell. ADB outline with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
 | `fdm/upper_shell.stl` or `resin/upper_shell.stl` | 1 | 57.0 × 98.5 × 23.5 (resin: 57.4 wide) | Top shell. The original form and button window; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
-| `common/button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Longer click**: a little free travel before the click. |
-| `common/button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, longer click. |
-| `common/button_left_short.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **shorter click**: nub 0.25 mm taller, so it clicks about 0.5 mm sooner at the front edge. Print this pair *or* the pair above. |
-| `common/button_right_short.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, shorter click. |
+| `common/button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Short throw** (the default): the click comes almost as soon as you press. |
+| `common/button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, short throw. |
+| `common/button_left_long.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **longer throw**: about 0.5 mm more travel at the front edge before the click, for a more deliberate press. Print this pair *or* the pair above. |
+| `common/button_right_long.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, longer throw. |
 | `common/on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
-| `common/battery_cover_1.stl` | 1 | 14.7 × 53.1 × 7.7 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 1.2 mm lower. **Use this one, not the Lisa's** (see Known issues). |
+| `common/battery_cover_1.stl` | 1 | 14.7 × 53.1 × 7.7 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 1.2 mm lower. **Use this one, not the Lisa or Macintosh mouse's** (see Known issues). |
 | `common/battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
 
 ![Render of the parts](images/preview.png)
@@ -84,7 +84,7 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
   Macintosh mice.
 - The M185's **scroll-wheel encoder**, under the right button, has to be desoldered: on the first
   print it got in the way of that button. The **middle-click switch** can stay on the board: it sits
-  below the left button. Neither cap is pocketed underneath.
+  well below the left button, and nothing touches it. Neither cap is pocketed underneath.
 - The caps rise slightly towards the front: 0.3 mm above the roof at the window's rear edge, 0.8 mm
   at its front, because the buttons rest a little nose-down on their hinges.
 - The caps have 0.6 mm of clearance to the window all round, and the plates about 1 mm to the side
@@ -110,17 +110,13 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
 
 ## Known issues
 
-- **Printed and in use** (2026-11-20). With the button fronts flush the standard click came a little
-  late, so there is now a short-click pair as well; it is not yet printed.
-- **Middle-click switch.** On the board printed so far it sits below the left button. If the left
-  button rubs on it on your board, desolder it: a two-button mouse doesn't need it.
-- **Battery door: lower profile.** This mouse is lower-profile than the Lisa mouse, so the cell has
-  less room above it. With a cell in, the Lisa mouse's door stood about 1.2 mm proud of the underside.
-  This repo's `battery_cover_1.stl` is the same door with its battery saddle 1.2 mm lower; the latch
-  piece (`battery_cover_2.stl`) is unchanged. The door opening itself is identical to the Lisa base's.
-- **Battery bay walls** from the Lisa base are cut down to 17.6 mm (from 18.15) to clear the right
-  button. They still stand 1.1 mm above the cell.
-- The switch positions come from caliper measurements on one M185 board (`210-002552 REV003`).
+- **Two button pairs.** The default buttons (`button_left.stl`, `button_right.stl`) have a short
+  throw: the click comes almost as soon as you press. The longer-throw pair (`button_left_long.stl`,
+  `button_right_long.stl`) has about 0.5 mm more travel at the front edge before the click, for those
+  who want each press to be more deliberate.
+- **Battery door.** This mouse's battery door is not the same as the Lisa and Macintosh mice's: its
+  `battery_cover_1.stl` has the battery saddle 1.2 mm lower, to suit this lower-profile shell. Use the
+  one from this repo. The latch piece (`battery_cover_2.stl`) is the same.
 
 ## Repository layout
 

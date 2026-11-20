@@ -15,7 +15,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 
 | Path | What |
 |------|------|
-| `models/` | Print-ready STLs, generated, in assembled position (frame F). `common/`: buttons (standard and `_short` pairs), battery door, slider. `fdm/`: the shells with parallel sides and the edge bevel. `resin/`: the shells with the original sides and edges (`build_lower(fdm=False)`, `build_top(fdm=False)`). |
+| `models/` | Print-ready STLs, generated, in assembled position (frame F). `common/`: buttons (default short-throw pair, and the `_long` pair), battery door, slider. `fdm/`: the shells with parallel sides and the edge bevel. `resin/`: the shells with the original sides and edges (`build_lower(fdm=False)`, `build_top(fdm=False)`). |
 | `scripts/geo.py` | Frames, board placement (`BOARD_X`, `BOARD_Y`), roof plane, CSG helpers, `clean_export`; `tm_adb` loads the source shells with `parallel_sides` applied. |
 | `scripts/fits.py` | Stand-ins for the M185 parts, defined in the Lisa base frame. |
 | `scripts/lisa_solid.py` | Rebuilds the Lisa base as a clean solid in `build/` (run once). |
@@ -102,9 +102,9 @@ overhang > 45° with a side on the bed: about 25 mm² (corner ends, window radii
   it at the clamp. Clamp pad 3 mm thick, two M3×6 countersunk screws up into bosses under the hump
   (`CLAMP_Y` −9). Hinge in front of the clamp: 0.8 thick, 4 long, two 5 mm straps per button (about
   0.4 N of spring on top of the switch, by estimate). Ribs on top keep the plate itself stiff.
-- **Click point**: a fixed nub over each plunger (`NUB_R` 3.0, doubled so it can't miss; `NUB_GAP` 0.25 at rest,
-  `NUB_GAP_SHORT` 0.0 for the `_short` pair, which `build_models.py` builds and checks as well: lever ratio
-  cap front / nub is 1.89, so the short pair clicks 0.47 mm sooner at the front) plus an M3×8 **stop screw** under
+- **Click point**: a fixed nub over each plunger (`NUB_R` 3.0, doubled so it can't miss; `NUB_GAP` 0.0 at rest for the default
+  short-throw pair, `NUB_GAP_LONG` 0.25 for the `_long` pair, which `build_models.py` builds and checks as well: lever
+  ratio cap front / nub is 1.89, so the long pair has 0.47 mm more travel at the front) plus an M3×8 **stop screw** under
   the plate front (y 44, x ±9) whose tip bears on the roof just ahead of the window; screwing in lowers
   the rest position. Range 0.71 mm at the nub with the head seated. This replaced cap-mounted striker
   screws: their heads would have landed on the encoder and middle-switch stand-ins, which sit about
@@ -124,7 +124,7 @@ overhang > 45° with a side on the bed: about 25 mm² (corner ends, window radii
 
 `build_models.py` builds both shell variants and checks each with both button pairs; it must end with
 `problems: 0`. Expected:
-- both button pairs checked (the `_short` pair reports gap 0.00 to its switches, by design);
+- both button pairs checked (the default pair reports gap 0.00 to its switches, by design);
 - buttons × upper 0.000 with gap 0 (clamp pads sit on their bosses);
 - lower × pcb / AA counted only beyond what the plain Lisa base has (the boxes ignore the board's cutouts);
 - right button at 3.0° press touches the trimmed bay wall (0.07 mm³): beyond the switch's travel
@@ -142,11 +142,13 @@ Built 2026-11-19. **Printed 2026-11-20**: prints well, clicks work well (stop sc
   preference, for the top's finish) the right button rubbed on the window's right edge and perhaps the
   inside wall; the left pocket was unneeded.
 - Since then: raise 0.5, `CAP_CLEAR` 0.6, plates and tab pulled in, no pockets, `NUB_R` 3.0. Printed: the
-  fronts sat flush but the click came late, hence the `_short` pair (not printed yet). The real plungers
-  evidently sit lower than `SW_TOP` (the button rests a little nose-down and still has free play).
+  fronts sat flush but the click came late, hence a short-throw pair. The real plungers evidently sit lower than
+  `SW_TOP` (the button rests a little nose-down and still has free play).
+- Short-throw buttons printed: they feel much better, so they are the default (`button_left/right.stl`, `NUB_GAP` 0.0);
+  the old standard pair is kept as `_long` for a more deliberate press (Mike). Middle-click switch: far below the
+  left button, nothing rubs on it. Battery door with the lowered saddle: works. Switch positions: confirmed good.
 
 Open items:
-- Print the `_short` buttons: click point right? Free in the window? (Tune `NUB_GAP_SHORT`, `CAP_CLEAR`.)
 - Print the parallel-sided, bevelled shells (2026-11-20, not printed): upper on its side, check the bed strip holds and
   the bevel needs no support; check the battery door still fits (its opening is unchanged).
 - Whether the stop screws earn their place, or can go (the click was good without them).

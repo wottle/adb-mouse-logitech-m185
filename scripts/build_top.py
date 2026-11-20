@@ -39,9 +39,11 @@ RIB_W=1.6; RIB_CLEAR=0.35; RIB_X=(8.0,15.0)   # |x| of the stiffening ribs on to
 # on the inside of the roof in front of the window. Screwing it in lowers the button's resting position (the hinge holds
 # the plate up against it), which brings the nub down onto the switch. The scroll-wheel parts sit about 3 mm inboard of
 # each switch, which is where a striker screw in the cap would have to go, so the adjustment lives at the front instead.
-NUB_R=3.0; NUB_GAP=0.25              # nub over the plunger; its gap to the plunger top with the button at rest, screw backed off
-NUB_GAP_SHORT=0.0                    # the 'short click' buttons: nub 0.25 taller, touching the modelled plunger at rest. Mike
-                                     # found the standard click late with the fronts flush; the real plungers sit lower than modelled.
+NUB_R=3.0
+NUB_GAP=0.0                          # default (short-throw) buttons: the nub touches the modelled plunger at rest. Mike printed
+                                     # these and they feel much better; the real plungers sit lower than modelled, so there is
+                                     # still a little travel before the click
+NUB_GAP_LONG=0.25                    # the '_long' buttons, for a more deliberate press: about 0.5 mm more travel at the cap front
 STOP_X=9.0; STOP_Y=44.0              # stop screw (F); 2.2 mm in front of the window, 2.5 behind the front wall
 STOP_BOSS_R=2.0; STOP_BOSS_L=4.5     # boss under the plate; an M3x8 seated against it stands 1.5 above the plate top
 TAB_Y=45.0                           # plate front edge round the stop screw: clear of the roof rounding into the front wall
