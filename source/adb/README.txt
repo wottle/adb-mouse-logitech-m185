@@ -1,0 +1,4 @@
+Apple Desktop Bus Mouse - Model G5431 (Shell) by StephenLulz on Thingiverse: https://www.thingiverse.com/thing:4545460
+
+Summary:
+Open Source Apple MouseYou've already seen the Apple G5431 Mouse; it's nearly iconic — and now the case is available as an open source reproduction which is faithful to the original. Ready to download and print.What's the best thing about my 3D reproduction? It's open source. Whether you plan to modify the design as a case for a bluetooth mouse or simply replace broken case components in your beloved original G5431, all of the files you need are available for printing and modification right now.It takes a community to keep the legacy of early Macintosh computers alive. Together we can maintain our hardware, embrace computer history, and re-experience the simplicity with future generations. If you appreciate this project please show your support by sharing my work and leaving feedback to further improve the design.
