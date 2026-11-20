@@ -2,8 +2,8 @@
 
 Each button is one piece: a cap in its half of the window, flush with the roof, on a plate that runs under the roof skin
 and is screwed up into two bosses under the hump. The plate bends at a thin hinge in front of its clamp (a flexure, like
-the original ADB button), so there are no pins to sag or bind. Each button presses its M185 switch through an M3
-countersunk screw (the striker), threaded up into the cap; turning it sets the click point.
+the original ADB button), so there are no pins to sag or bind. A printed nub under each plate presses its M185 switch;
+an M3 stop screw under the front of the plate sets the resting position, and with it the click point.
 
 Most geometry is made in the roof frame R: the outer roof plane is z=0 and y runs along the roof (y_R = y / cos(roof angle)).
 """
@@ -18,13 +18,15 @@ def R_of(y,z):                       # F (y,z) -> R (y,z)
 # --- the window (roof frame), measured from the upper shell
 WIN_X=(-17.86,18.19); WIN_Y=(13.42,42.87); WIN_R=1.5
 GAP=0.8                              # slot between the two buttons
-CAP_CLEAR=0.35                       # cap to window, each side
-CAP_PROUD=0.3                        # cap top above the roof
+CAP_CLEAR=0.6                        # cap to window, each side (0.35 rubbed on the second print, upper printed on its side)
+CAP_PROUD=0.3                        # cap top above the roof at the window's rear edge
+CAP_FRONT_RAISE=0.5                  # extra cap height at the window's front edge, tapering to 0 at its rear. The first print
+                                     # rested about 1 mm low at the front (rear flush); 1.0 left the fronts standing proud.
 # --- plate (roof frame z is negative inside)
 PLATE_T=2.0
 GAP_LIP=0.1                          # plate top below the roof skin at the front lip (the up-stop)
 LIP=1.5                              # plate reaches this far in front of the window
-PLATE_X={-1:-23.15,1:23.5}           # outer edges (inner walls are about +-24.0 at the front)
+PLATE_X={-1:-22.65,1:23.0}           # outer edges: about 1 mm in from the side walls at the front (0.55 scraped)
 # --- clamp under the hump, hinge in front of it
 CLAMP_Y=-9.0                         # F y of the clamp screws
 CLAMP_L=9.0; CLAMP_T=3.0
@@ -37,10 +39,14 @@ RIB_W=1.6; RIB_CLEAR=0.35; RIB_X=(8.0,15.0)   # |x| of the stiffening ribs on to
 # on the inside of the roof in front of the window. Screwing it in lowers the button's resting position (the hinge holds
 # the plate up against it), which brings the nub down onto the switch. The scroll-wheel parts sit about 3 mm inboard of
 # each switch, which is where a striker screw in the cap would have to go, so the adjustment lives at the front instead.
-NUB_R=1.5; NUB_GAP=0.25              # nub over the plunger; its gap to the plunger top with the button at rest, screw backed off
+NUB_R=3.0; NUB_GAP=0.25              # nub over the plunger; its gap to the plunger top with the button at rest, screw backed off
+NUB_GAP_SHORT=0.0                    # the 'short click' buttons: nub 0.25 taller, touching the modelled plunger at rest. Mike
+                                     # found the standard click late with the fronts flush; the real plungers sit lower than modelled.
 STOP_X=9.0; STOP_Y=44.0              # stop screw (F); 2.2 mm in front of the window, 2.5 behind the front wall
-STOP_BOSS_R=2.2; STOP_BOSS_L=4.5     # boss under the plate; an M3x8 seated against it stands 1.5 above the plate top
-TAB_Y=46.2                           # plate front edge round the stop screw (front wall inside face at 46.5)
+STOP_BOSS_R=2.0; STOP_BOSS_L=4.5     # boss under the plate; an M3x8 seated against it stands 1.5 above the plate top
+TAB_Y=45.0                           # plate front edge round the stop screw: clear of the roof rounding into the front wall
+                                     # (46.2 touched it); the screw boss below the plate still reaches y 46.0
+CASE_BOSS_CLEAR=1.0                  # buttons to the front case-screw bosses (0.6 left 0.3 near the roof, where the boss flares)
 WHEEL_CLEAR=0.4; PRESS_DEG=2.5       # clearance kept round the scroll-wheel parts, over this much press
 
 yl=WIN_Y[1]+LIP                      # R y of the plate's front lip
@@ -76,7 +82,7 @@ def press(M,deg):
     anything ahead of the axis, hence the minus."""
     hy,hz=hinge_axis_F(); return M.translate([0,-hy,-hz]).rotate([-deg,0,0]).translate([0,hy,hz])
 
-def button(side,U):
+def button(side,U,nub_gap=NUB_GAP):
     s=side; xin=s*GAP/2; xout=PLATE_X[s]; x0,x1=sorted((xin,xout))
     # plate slab: from the clamp's rear end to the lip
     slab=half_plane(True)-half_plane(True,-PLATE_T)
@@ -86,8 +92,11 @@ def button(side,U):
     hinge_cut=(half_plane(True,-HINGE_T)^box(x0-1,x1+1,y_h0,y_h1,-40,10))
     straps=box(*sorted((xin,xin+s*STRAP_W)),y_h0-0.01,y_h1+0.01,-40,10)+box(*sorted((xout,xout-s*STRAP_W)),y_h0-0.01,y_h1+0.01,-40,10)
     slot=box(x0,x1,y_h0,y_h1,-40,10)-straps
-    # cap: the window less clearance, this side of the slot, from inside the plate up to just proud of the roof
-    cap=fromR(box(-40,40,-40,80,-40,CAP_PROUD)-half_plane(True,-PLATE_T))^cap_prism_F(s)
+    # cap: the window less clearance, this side of the slot, from inside the plate up to its top: CAP_PROUD over the roof
+    # at the window's rear edge, rising CAP_FRONT_RAISE more by its front edge (R)
+    k=CAP_FRONT_RAISE/(WIN_Y[1]-WIN_Y[0]); n=np.array([0,k,-1.0]); Ln=np.linalg.norm(n)
+    top=box(-40,40,-40,80,-40,CAP_PROUD+CAP_FRONT_RAISE+5).trim_by_plane(list(n),(k*WIN_Y[0]-CAP_PROUD)/Ln)
+    cap=fromR(top-half_plane(True,-PLATE_T))^cap_prism_F(s)
     # ribs on top of the plate, from the hinge to the window's rear edge, stopping RIB_CLEAR under the skin
     ribs=Manifold.batch_boolean([box(s*rx-RIB_W/2,s*rx+RIB_W/2,y_h1,WIN_Y[0]+0.5,-30,-SKIN-RIB_CLEAR) for rx in RIB_X],mf.OpType.Add)-half_plane(True,-0.5)
     B=fromR(plate+clamp+ribs-(hinge_cut-straps)-slot)+cap
@@ -96,8 +105,8 @@ def button(side,U):
         zt=plate_top_F(x,y); zb=zt-CLAMP_T/math.cos(math.radians(TH+math.degrees(math.atan(SLOPE))))
         B=B-cyl(x,y,zb-5,zt+1,1.65)-cyl(x,y,zb-5,zb+0.3,3.15)-cyl(x,y,zb+0.299,zb+1.8,3.15,1.65)
     for bx,by in SCREW_TOP:                                      # keep clear of the case-screw bosses at the front corners
-        B=B-cyl(bx,by,-5,40,2.55+0.6)
-    # pockets for the scroll-wheel encoder and the middle-click switch: their swept volume over the press, plus clearance
+        B=B-cyl(bx,by,-5,40,2.55+CASE_BOSS_CLEAR)
+    # pockets for any scroll-wheel parts left on the board (WHEEL, now none): their swept volume over the press, plus clearance
     for k in WHEEL:
         P=prox[k]; c=WHEEL_CLEAR; d=c/np.sqrt(2)
         grown=Manifold.batch_boolean([P.translate([dx,dy,dz]) for dx,dy,dz in
@@ -106,7 +115,7 @@ def button(side,U):
         B=B-swept
     # nub over the switch
     sw=SW_R if s>0 else SW_L; zb=plate_bottom_F(*sw)
-    B=B+cyl(sw[0],sw[1],SW_TOP+NUB_GAP,zb+0.5,NUB_R)
+    B=B+cyl(sw[0],sw[1],SW_TOP+nub_gap,zb+0.5,NUB_R)
     # stop screw: plate tab out to TAB_Y, boss below, M3 pilot through boss and plate
     x=s*STOP_X; zt=plate_top_F(x,STOP_Y); zb=plate_bottom_F(x,STOP_Y)
     tab=fromR((half_plane(True)-half_plane(True,-PLATE_T))^box(x-3.5,x+3.5,yl-1,TAB_Y/CT+1,-40,10))^box(x-3.5,x+3.5,30,TAB_Y,-10,40)

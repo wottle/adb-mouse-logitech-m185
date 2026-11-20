@@ -14,7 +14,7 @@ MODELS=os.path.join(ROOT,'models')
 CARRIED=('battery_cover_1','battery_cover_2','on_off_button')   # from the Lisa mouse project, unchanged
 def gap(a,b,cap=3.0):
     return 0.0 if (a^b).volume()>1e-4 else a.min_gap(b,cap)
-def check(lo,U,L,R,verbose=True):
+def check(lo,U,L,R,verbose=True,nub_gap=NUB_GAP):
     bad=0; P=dict(upper=U,lower=lo,left=L,right=R)
     E={k:v for k,v in prox.items()}
     print('--- at rest: overlap (mm3) / gap (mm)')
@@ -31,7 +31,7 @@ def check(lo,U,L,R,verbose=True):
                 ok=v<0.01
                 print(f'  {a:6s} x {k:7s} overlap {v:7.3f}  gap {g:5.2f}'+('' if ok else '   <-- PROBLEM')); bad+=not ok
     print('--- pressing (degrees about the hinge); the nub reaches its plunger at about',
-          f'{math.degrees(NUB_GAP/(SW_L[1]-hinge_axis_F()[0])):.2f} deg with the stop screw backed off')
+          f'{math.degrees(nub_gap/(SW_L[1]-hinge_axis_F()[0])):.2f} deg with the stop screw backed off')
     hy,hz=hinge_axis_F(); fwd=box(-60,60,hy,80,-60,80)
     for side,B,sw in (('left',L,'swL'),('right',R,'swR')):
         row=[]
@@ -48,10 +48,13 @@ def check(lo,U,L,R,verbose=True):
 if __name__=='__main__':
     os.makedirs(MODELS,exist_ok=True)
     lo,_=build_lower(); U,L,R=build_top()
-    for n,M in (('lower_shell',lo),('upper_shell',U),('button_left',L),('button_right',R)):
+    Ls=button(-1,U,NUB_GAP_SHORT); Rs=button(1,U,NUB_GAP_SHORT)                 # short-click variants
+    for n,M in (('lower_shell',lo),('upper_shell',U),('button_left',L),('button_right',R),
+                ('button_left_short',Ls),('button_right_short',Rs)):
         t=clean_export(M,os.path.join(MODELS,n+'.stl')); print(f'  {n:13s} {len(t.faces):7d} tris  size {np.round(t.extents,1)}')
     for n in CARRIED:
         src=os.path.join(SRC,'lisa',n+'.stl')
         if os.path.exists(src): shutil.copy(src,os.path.join(MODELS,n+'.stl'))
     bad=check(lo,U,L,R)
+    print('=== short-click buttons (nub gap %.2f)'%NUB_GAP_SHORT); bad+=check(lo,U,Ls,Rs,nub_gap=NUB_GAP_SHORT)
     print('problems:',bad)

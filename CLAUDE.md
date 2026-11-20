@@ -15,7 +15,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 
 | Path | What |
 |------|------|
-| `models/` | Print-ready STLs, generated. The four new parts are in assembled position (frame F). |
+| `models/` | Print-ready STLs, generated. The new parts are in assembled position (frame F). Two button pairs: standard and `_short` (taller nubs). |
 | `scripts/geo.py` | Frames, board placement (`BOARD_X`, `BOARD_Y`), roof plane, CSG helpers, `clean_export`. |
 | `scripts/fits.py` | Stand-ins for the M185 parts, defined in the Lisa base frame. |
 | `scripts/lisa_solid.py` | Rebuilds the Lisa base as a clean solid in `build/` (run once). |
@@ -55,24 +55,38 @@ standoff (same board position as the Lisa v2 and Mac), cable slot closed, Lisa f
 openings are identical to the Lisa base, so the Lisa door and slider fit.
 
 **Buttons** (`build_top.py`): flexure, not pins.
-- Cap in its half of the window (0.35 clearance, 0.8 slot, 0.3 proud), on a 2 mm plate under the skin.
+- Cap in its half of the window (`CAP_CLEAR` 0.6, 0.8 slot), on a 2 mm plate under the skin. Its top is a
+  wedge in R: `CAP_PROUD` 0.3 above the roof at the window's rear edge, plus `CAP_FRONT_RAISE` 0.5 at its
+  front edge. The first print rested about 1 mm low at the front with the rear flush and the click right,
+  so the cap was raised rather than the plate re-angled (that would move the nub and the click). 1.0 stood
+  proud; 0.5 is Mike's call. 0.35 clearance rubbed with the upper printed on its side (the window's jamb
+  is then an overhang).
+- Side clearances (second print scraped): plate outer edges `PLATE_X` ±22.65/23.0, at least 0.94 from the
+  side walls; `CASE_BOSS_CLEAR` 1.0 round the front case-screw bosses; front tab `TAB_Y` 45.0 (46.2 touched
+  the roof's rounding into the front wall). The only gaps under 0.5 left are vertical, under the roof
+  (0.1 at the lip up-stop, 0.05 at the tab), and they open as the button is pressed.
 - The plate is 2.6° steeper than the roof: 0.1 under the skin at the front lip (the up-stop), 2.5 below
   it at the clamp. Clamp pad 3 mm thick, two M3×6 countersunk screws up into bosses under the hump
   (`CLAMP_Y` −9). Hinge in front of the clamp: 0.8 thick, 4 long, two 5 mm straps per button (about
   0.4 N of spring on top of the switch, by estimate). Ribs on top keep the plate itself stiff.
-- **Click point**: a fixed nub over each plunger (0.25 gap at rest) plus an M3×8 **stop screw** under
+- **Click point**: a fixed nub over each plunger (`NUB_R` 3.0, doubled so it can't miss; `NUB_GAP` 0.25 at rest,
+  `NUB_GAP_SHORT` 0.0 for the `_short` pair, which `build_models.py` builds and checks as well: lever ratio
+  cap front / nub is 1.89, so the short pair clicks 0.47 mm sooner at the front) plus an M3×8 **stop screw** under
   the plate front (y 44, x ±9) whose tip bears on the roof just ahead of the window; screwing in lowers
   the rest position. Range 0.71 mm at the nub with the head seated. This replaced cap-mounted striker
   screws: their heads would have landed on the encoder and middle-switch stand-ins, which sit about
   3 mm inboard of each switch.
-- Caps are pocketed for the encoder and middle switch, swept over 2.5° of press plus 0.4 clearance;
-  0.83–0.85 mm of cap left above them.
+- No pockets (`WHEEL` in `fits.py` is empty; the code still sweeps a pocket for any part listed there).
+  The encoder is **desoldered**: on the first print it got in the way of the right button, and its
+  pocket showed through the cap. The middle switch stays and clears the left button unpocketed (the
+  photo-estimate box was too tall). Both boxes are kept as `fits.removed` and are not checked.
 - The upper shell's original button mount (pins at x ±21 and on the centreline at the hinge line, two
   ribs) and the cable ribs at the front are removed.
 
 ## Checks
 
 `build_models.py` must end with `problems: 0`. Expected:
+- both button pairs checked (the `_short` pair reports gap 0.00 to its switches, by design);
 - buttons × upper 0.000 with gap 0 (clamp pads sit on their bosses);
 - lower × pcb / AA counted only beyond what the plain Lisa base has (the boxes ignore the board's cutouts);
 - right button at 3.0° press touches the trimmed bay wall (0.07 mm³): beyond the switch's travel
@@ -83,11 +97,20 @@ the first draft had the sign wrong and swept the wheel pockets the wrong way.
 
 ## Status
 
-Built 2026-11-19, **not printed**. Open items:
-- Print and test: hinge feel, stop-screw range, cap fit in the window, door fit, case screw lengths.
-- Real heights and positions of the M185 encoder and middle-click switch (only photo estimates).
-- Print orientation is a recommendation only (lower flat, upper as modelled with roof supports,
-  buttons cap down).
+Built 2026-11-19. **Printed 2026-11-20**: prints well, clicks work well (stop screws apparently not fitted).
+- First print: the encoder had to be desoldered, its pocket showed through the right cap, and the
+  buttons rested about 1 mm low at the front.
+- Second print (`CAP_FRONT_RAISE` 1.0): fronts stood proud; with the upper printed on its side (Mike's
+  preference, for the top's finish) the right button rubbed on the window's right edge and perhaps the
+  inside wall; the left pocket was unneeded.
+- Since then: raise 0.5, `CAP_CLEAR` 0.6, plates and tab pulled in, no pockets, `NUB_R` 3.0. Printed: the
+  fronts sat flush but the click came late, hence the `_short` pair (not printed yet). The real plungers
+  evidently sit lower than `SW_TOP` (the button rests a little nose-down and still has free play).
+
+Open items:
+- Print the `_short` buttons: click point right? Free in the window? (Tune `NUB_GAP_SHORT`, `CAP_CLEAR`.)
+- Whether the stop screws earn their place, or can go (the click was good without them).
+- Print orientation: lower flat, upper on its side (or as modelled with roof supports), buttons cap down.
 - No slicer project or photos yet.
 
 ## Animation

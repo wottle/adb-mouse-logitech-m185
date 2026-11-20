@@ -50,8 +50,10 @@ frame (X right, Y toward the buttons, Z up, underside at Z = 0).
 |------|:---:|-----------|---------|
 | `lower_shell.stl` | 1 | 57.4 × 98.5 × 24.2 | Bottom shell. ADB outline with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
 | `upper_shell.stl` | 1 | 57.4 × 98.5 × 23.5 | Top shell. The original form and button window; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
-| `button_left.stl` | 1 | 22.7 × 60.6 × 15.1 | Left button: cap, flexing plate, clamp. |
-| `button_right.stl` | 1 | 23.1 × 60.6 × 15.1 | Right button. |
+| `button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Longer click**: a little free travel before the click. |
+| `button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, longer click. |
+| `button_left_short.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **shorter click**: nub 0.25 mm taller, so it clicks about 0.5 mm sooner at the front edge. Print this pair *or* the pair above. |
+| `button_right_short.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, shorter click. |
 | `on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
 | `battery_cover_1.stl` | 1 | 14.7 × 53.1 × 8.9 | Battery door, main plate. Unchanged from the Lisa mouse. |
 | `battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
@@ -71,8 +73,13 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
   just in front of the window. Screwing it in lowers the button's resting position, which brings the
   nub down onto the switch. This sets the click point, as the striker screws do on the Lisa and
   Macintosh mice.
-- The caps are pocketed underneath for the M185's **scroll-wheel encoder and middle-click switch**, so
-  they should not need to be removed (see Known issues).
+- The M185's **scroll-wheel encoder**, under the right button, has to be desoldered: on the first
+  print it got in the way of that button. The **middle-click switch** can stay on the board: it sits
+  below the left button. Neither cap is pocketed underneath.
+- The caps rise slightly towards the front: 0.3 mm above the roof at the window's rear edge, 0.8 mm
+  at its front, because the buttons rest a little nose-down on their hinges.
+- The caps have 0.6 mm of clearance to the window all round, and the plates about 1 mm to the side
+  walls, so the buttons move freely with the upper shell printed on its side.
 
 ![Sections](images/sections.png)
 
@@ -90,11 +97,10 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
 
 ## Known issues
 
-- **Not printed yet.**
-- **Scroll-wheel parts.** The M185's encoder and middle-click switch are modelled as boxes from
-  photos, not measured. The caps keep 0.35 mm round those boxes and 0.85 mm of plastic above them. If
-  a button rubs on one of them on your board, desolder that part: a two-button mouse doesn't need
-  either.
+- **Printed and in use** (2026-11-20). With the button fronts flush the standard click came a little
+  late, so there is now a short-click pair as well; it is not yet printed.
+- **Middle-click switch.** On the board printed so far it sits below the left button. If the left
+  button rubs on it on your board, desolder it: a two-button mouse doesn't need it.
 - **Battery bay walls** from the Lisa base are cut down to 17.6 mm (from 18.15) to clear the right
   button. They still stand 1.1 mm above the cell.
 - The switch positions come from caliper measurements on one M185 board (`210-002552 REV003`).

@@ -23,7 +23,8 @@ steps are the same as the Lisa mouse's, and its guide has photos of each.
 
 Follow steps 1–8 of the [Lisa mouse guide](https://github.com/wottle/lisa-mouse-logitech-m185/blob/main/docs/ASSEMBLY.md):
 remove the battery and the single screw, open the case, lift out the board, and remove the rubber
-scroll wheel. Leave the wheel's encoder and the middle-click switch on the board for now.
+scroll wheel. Then **desolder the scroll wheel's encoder** (the part the wheel's axle went into, beside
+the right switch): it gets in the way of the right button. The middle-click switch can stay.
 
 ## 2. Board into the lower shell
 
@@ -53,7 +54,12 @@ switch. With the head seated against the boss the screw is at its limit (about 0
 
 ## 5. Set the click point
 
-Rest the upper shell on the lower shell (or put in two corner screws loosely) and press each button:
+Rest the upper shell on the lower shell (or put in two corner screws loosely) and press each button.
+
+If the click comes too late with the stop screws out, print the **short-click buttons**
+(`button_left_short.stl`, `button_right_short.stl`; see [PRINTING.md](PRINTING.md)) rather than
+screwing the stop screws in: the screws shorten the travel by lowering the button, so its front no
+longer sits flush. Use the stop screws for small trims:
 
 - **Free play before the click:** open up and turn that button's stop screw **in** half a turn.
 - **No click at all, or the button feels stuck down:** turn it **out** half a turn.
@@ -61,9 +67,12 @@ Rest the upper shell on the lower shell (or put in two corner screws loosely) an
 Repeat until each button clicks with no free play and no pre-click. Expect about one turn in from
 where you started. Judge it with the case closed, as on the Lisa and Macintosh mice.
 
-If a button rubs or will not return no matter how the stop screw is set, check whether the scroll
-wheel's encoder or the middle-click switch is touching the underside of the cap. Neither is needed for
-a two-button mouse; desolder whichever is in the way.
+The stop screws are optional. Without them each button rests where its hinge holds it, and the nub
+clicks the switch after a little free travel. If the buttons click well that way, leave them out.
+
+If the left button rubs or will not return no matter how the stop screw is set, check whether the
+middle-click switch is touching the underside of the cap. It isn't needed for a two-button mouse;
+desolder it.
 
 ## 6. Close the case
 

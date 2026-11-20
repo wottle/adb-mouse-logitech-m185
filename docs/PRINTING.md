@@ -25,12 +25,24 @@ Flat underside on the bed. Supports only where the slicer insists inside the M18
 the Lisa mouse's base.
 
 ### Upper shell
-As modelled, rim down and top up, with tree supports under the inside of the roof. The outside then
-needs no supports and keeps its finish. The mouse is slightly wedge-shaped and only the top few
-millimetres of the sides belong to the upper shell, so printing it on its side (as for the Macintosh
-mouse) doesn't suit this one.
+Either way works:
+- **On its side** (as for the Macintosh mouse) gives the best finish on the top. The window then
+  prints with one jamb as an overhang, which may sag a little; the caps have 0.6 mm of clearance to
+  allow for it.
+- **As modelled**, rim down and top up, with tree supports under the inside of the roof. The outside
+  needs no supports, but the top shows its layer steps.
 
 ### Buttons
+There are two pairs; print one:
+
+| Pair | Files | Click |
+|------|-------|-------|
+| Longer click | `button_left.stl`, `button_right.stl` | Some free travel before the click (about 0.5 mm at the front edge of the cap, plus the switch's own travel). |
+| Shorter click | `button_left_short.stl`, `button_right_short.stl` | The nubs are 0.25 mm taller and start on the switches, so the click comes about 0.5 mm sooner. |
+
+They are otherwise identical. If you're unsure, start with the shorter click; if a button feels held
+down or won't click back, use the longer one (or that one button from the other pair).
+
 Cap face down on the bed, with supports under the plate around the cap. The cap top is the visible
 surface and gets the first-layer finish. The thin hinge strip (0.8 mm) then prints flat, in four
 layers, which is the strong direction for it.
@@ -43,5 +55,6 @@ As for the Lisa mouse (see its [PRINTING.md](https://github.com/wottle/lisa-mous
 
 ## Fit
 
-- Each cap has 0.35 mm of clearance to the window all round, and the two caps have 0.8 mm between them.
+- Each cap has 0.6 mm of clearance to the window all round, and the two caps have 0.8 mm between them.
+  The plates keep about 1 mm from the side walls and the front case-screw bosses.
 - If a cap rubs in the window, sand its side lightly; don't enlarge the window.
