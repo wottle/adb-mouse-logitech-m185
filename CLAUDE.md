@@ -23,6 +23,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 | `scripts/build_top.py` | Upper shell and both buttons. |
 | `scripts/build_models.py` | Runs everything, exports `models/`, runs the fit checks. |
 | `scripts/sections.py` | `images/sections.png` (2D side sections). `render.py` is the splat renderer. |
+| `scripts/hide_logo.py` | Render-only copies of the upper shells with the moulded Apple logo filled (`build/upper_shell_nologo_*.stl`). |
 | `source/adb/` | StephenLulz's G5431 model (CC BY-NC-SA, tracked). Files are named `G4351` as downloaded. |
 | `source/lisa/` | Lisa v1 base + battery door + power slider (`models/common/battery_cover_1.stl` is generated from it, lower). |
 
@@ -153,11 +154,18 @@ Open items:
 - Slicer project: `print/adb_mouse_m185_creality_k2_plus.3mf` (Mike's, Creality K2 Plus); made before the parallel
   sides and bevel, so re-slice the shells. No photos yet.
 
-## Animation
+## Animation and pictures
+
+**Keep the Apple logo out of pictures** (Mike, 2026-11-20, as on the source model this is based on). The printed
+upper shells keep their moulded logo; every render of the top uses `build/upper_shell_nologo_fdm.stl` from
+`scripts/hide_logo.py` (the logo recess on the rear slope filled flush), and views stay low and from the front or
+sides, not straight down on the top.
 
 `images/animation.gif` (README, 640×360, 15 fps) and `images/animation.mp4` (1280×720, 30 fps, 10 s loop)
-are VTK renders of the assembled models: exploded, together, one full turn, apart again. They were rendered
-outside the repo (offscreen VTK through EGL, piped to ffmpeg); re-render them when the models change.
+are VTK renders of the FDM shells and common buttons: exploded, together, one full turn at 14° elevation, apart
+again. `images/preview.png` is two VTK stills from the front right at 18° (assembled; exploded with the M185
+stand-ins). Both were rendered outside the repo (offscreen VTK through EGL, piped to ffmpeg); re-render them when
+the models change. `images/buttons.png` (splat render, buttons only) and `images/sections.png` don't show the top.
 
 ## Working conventions
 
