@@ -15,7 +15,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 
 | Path | What |
 |------|------|
-| `models/` | Print-ready STLs, generated. The new parts are in assembled position (frame F). Two button pairs: standard and `_short` (taller nubs). |
+| `models/` | Print-ready STLs, generated, in assembled position (frame F). `common/`: buttons (standard and `_short` pairs), battery door, slider. `fdm/`: the shells with parallel sides and the edge bevel. `resin/`: the shells with the original sides and edges (`build_lower(fdm=False)`, `build_top(fdm=False)`). |
 | `scripts/geo.py` | Frames, board placement (`BOARD_X`, `BOARD_Y`), roof plane, CSG helpers, `clean_export`; `tm_adb` loads the source shells with `parallel_sides` applied. |
 | `scripts/fits.py` | Stand-ins for the M185 parts, defined in the Lisa base frame. |
 | `scripts/lisa_solid.py` | Rebuilds the Lisa base as a clean solid in `build/` (run once). |
@@ -24,7 +24,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 | `scripts/build_models.py` | Runs everything, exports `models/`, runs the fit checks. |
 | `scripts/sections.py` | `images/sections.png` (2D side sections). `render.py` is the splat renderer. |
 | `source/adb/` | StephenLulz's G5431 model (CC BY-NC-SA, tracked). Files are named `G4351` as downloaded. |
-| `source/lisa/` | Lisa v1 base + battery door + power slider (`models/battery_cover_1.stl` is generated from it, lower). |
+| `source/lisa/` | Lisa v1 base + battery door + power slider (`models/common/battery_cover_1.stl` is generated from it, lower). |
 
 ## Frames and key numbers
 
@@ -47,7 +47,7 @@ Both have their own `CLAUDE.md`; lessons there apply here.
 
 ## Design and why
 
-**Parallel sides** (`geo.parallel_sides`, applied when `tm_adb` loads the source shells, so everything downstream
+**Parallel sides** (FDM shells only; `geo.parallel_sides`, applied when `tm_adb(parallel=True)` loads the source shells, so everything downstream
 follows): the source sides lean in (0.033 per mm of height) and taper (narrower at the front); printed on its side the
 upward side banded. The outer skin (vertices within 0.3 of the convex hull, open face excluded) moves sideways by
 `SIDE_W` − (that side's own fitted plane), ramped in across `RAMP_X` 22.0–24.2 where the roof and the front/rear faces are
@@ -78,7 +78,7 @@ end. Mike found the door seats without a cell either way; removed anyway as a st
 all of `Oi` outside the interior) must skip the bay too, or it puts a sliver of the tab back. Check: lower minus the Lisa base
 in the bay zone above the floor is under 0.03 mm³.
 
-**Upper edge bevel** (`build_top.upper_shell`, `edge_fill`, `edge_bevel_cutter`): the roof-to-side rounding (2.4 tall) is
+**Upper edge bevel** (FDM only; `build_top.upper_shell(fdm=True)`, `edge_fill`, `edge_bevel_cutter`): the roof-to-side rounding (2.4 tall) is
 replaced by a flat side up to `EDGE_BEVEL` 2.0 below the roof, then 45° to the roof, so the upper prints on its side with
 no supports outside (flat strip 1.9 → 2.3). Built as fill + cuts, no coincident faces: the hull's yz profile at
 |x| = `EDGE_X` 22.5, shrunk `EDGE_INSET` 0.03, extruded across x, kept inside the plan outline (hull projection −0.03, in
@@ -121,7 +121,8 @@ overhang > 45° with a side on the bed: about 25 mm² (corner ends, window radii
 
 ## Checks
 
-`build_models.py` must end with `problems: 0`. Expected:
+`build_models.py` builds both shell variants and checks each with both button pairs; it must end with
+`problems: 0`. Expected:
 - both button pairs checked (the `_short` pair reports gap 0.00 to its switches, by design);
 - buttons × upper 0.000 with gap 0 (clamp pads sit on their bosses);
 - lower × pcb / AA counted only beyond what the plain Lisa base has (the boxes ignore the board's cutouts);
@@ -169,7 +170,9 @@ outside the repo (offscreen VTK through EGL, piped to ffmpeg); re-render them wh
   wall's inner outline + 0.3; fills sit 0.05 inside the original skin; floor joins overlap at
   `FLOOR_CUT`, kept off the Lisa solid's 0.05 grid). `clean_export` tries the plain mesh first; simplify
   can itself break a clean mesh.
-- Print-friendliness rules Mike has asked for: flat bottoms with 45° bevels, 45° ramps under bosses,
+- Two outputs: FDM shells (print-friendly changes) and resin shells (the original's outside). Keep anything that
+  changes the outside only for printing on FDM behind the `fdm` switch.
+- Print-friendliness rules Mike has asked for (FDM): flat bottoms with 45° bevels, 45° ramps under bosses,
   conical countersinks, supports only where unavoidable, solid blocks where they save supports.
 - One named constant per tunable dimension, with a comment saying what it does.
 - Mike's calipers have drifted off zero before; confirm a surprising measurement.

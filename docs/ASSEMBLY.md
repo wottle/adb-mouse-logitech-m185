@@ -1,6 +1,7 @@
 # Assembly
 
-Part names refer to the files in [`models/`](../models/). There are no build photos yet: the M185
+Part names refer to the files in [`models/`](../models/): the shells from `models/fdm/` or
+`models/resin/` (whichever you printed), everything else from `models/common/`. There are no build photos yet: the M185
 steps are the same as the Lisa mouse's, and its guide has photos of each.
 
 ## What you need

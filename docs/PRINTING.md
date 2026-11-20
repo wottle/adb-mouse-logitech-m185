@@ -16,6 +16,11 @@ Untested on this mouse yet. These are the settings used for the Lisa and Macinto
 
 Any FDM printer with roughly a 100 × 100 mm bed can print every part.
 
+**Which shells:** print `models/fdm/lower_shell.stl` and `models/fdm/upper_shell.stl` on an FDM printer,
+and everything in `models/common/`. On a resin printer use `models/resin/` instead: those shells keep
+the original's sloping sides and rounded edges, which don't need straightening for resin. Orient and
+support them as your resin slicer suggests; the notes below are for FDM.
+
 ## Orientation
 
 The STLs are in assembled position, not print position: lay them out as below.

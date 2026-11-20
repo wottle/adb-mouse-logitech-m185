@@ -23,8 +23,9 @@ ST_B=(-3.0,45.18); PCB_SEAT=8.05+DZ
 def outline(m,z):
     g=xs_to_shapely(section_xs(m,z)); polys=list(g.geoms) if g.geom_type!='Polygon' else [g]
     return max(polys,key=lambda p:p.area)
-def build_lower(verbose=True):
-    t=tm_adb('lower'); lo=to_man(t)
+def build_lower(verbose=True,fdm=True):
+    """fdm: parallel sides (see geo.parallel_sides); otherwise (resin) the original's sloping sides"""
+    t=tm_adb('lower',parallel=fdm); lo=to_man(t)
     ring=outline(t,5.6)
     O=sg.Polygon(ring.exterior).convex_hull                        # outside, near the bottom
     interior=max([sg.Polygon(r) for r in ring.interiors],key=lambda q:q.area).buffer(0.3)    # 0.3 into the walls (2.5 -> 2.2 mm): a cutter that only grazes
@@ -67,7 +68,7 @@ def build_lower(verbose=True):
     for x,y in SCREW:
         lo=lo-cyl(x,y,-1,SEAM+1,1.65)-cyl(x,y,-1,0.3,3.15)-cyl(x,y,0.299,1.8,3.15,1.65)
     # print tolerance against the upper shell where they meet
-    up=to_man(tm_adb('upper'))-cable_ribs_cut()                     # (no notches for the removed cable ribs)
+    up=to_man(tm_adb('upper',parallel=fdm))-cable_ribs_cut()                     # (no notches for the removed cable ribs)
     for dx,dy in ((0.15,0),(-0.15,0),(0,0.15),(0,-0.15)): lo=lo-up.translate([dx,dy,0])
     lo=max(lo.decompose(),key=lambda d:d.volume())
     if verbose: print(f'lower shell: volume {lo.volume():.0f} mm3, bounds {np.round(lo.bounding_box(),2)}')

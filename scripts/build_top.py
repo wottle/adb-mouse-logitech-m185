@@ -178,9 +178,13 @@ def edge_fill(t,H):
     E=E^prism(plan.simplify(0.005),-5,55)                                    # simplified: no near-duplicate vertices
     yy,zz=roof_edge_z(t); zone=yz_extrude([(y,z-EDGE_DEPTH) for y,z in zip(yy,zz)]+[(yy[-1],80),(yy[0],80)],EDGE_X,40)
     return E^(zone+zone.mirror([1,0,0]))
-def upper_shell():
-    t=tm_adb('upper'); U=to_man(t); H=to_man(t.convex_hull)
-    U=((U+edge_fill(t,H))-edge_bevel_cutter(t))^box(-SIDE_W,SIDE_W,-60,60,-5,60)   # flat sides up to a 45 deg bevel: no supports
+def upper_shell(fdm=True):
+    """fdm: parallel sides and a 45 deg bevel along the roof's side edges (prints on its side without supports).
+    Otherwise (resin) the original's sloping sides and rounded edges."""
+    t=tm_adb('upper',parallel=fdm); U=to_man(t)
+    if fdm:
+        H=to_man(t.convex_hull)
+        U=((U+edge_fill(t,H))-edge_bevel_cutter(t))^box(-SIDE_W,SIDE_W,-60,60,-5,60)   # flat sides up to a 45 deg bevel
     for x,y in SCREW_TOP: U=U-cyl(x,y,5.0,17.0,1.35)                       # M3 pilot (was 2.5)
     U=U-cable_ribs_cut()                                                       # the old cable-clamp ribs at the front
     # the original button's mount (pins and ribs under the roof), anywhere over the new plates
@@ -192,8 +196,8 @@ def upper_shell():
             U=U+(cyl(x,y,zb-1,ceil(y)+0.6,BOSS_R)^above)                   # boss ends on the plate's (tilted) top face
             U=U-cyl(x,y,zb-1,roof(y)-0.8,1.35)
     return U
-def build_top(verbose=True):
-    U=upper_shell()
+def build_top(verbose=True,fdm=True):
+    U=upper_shell(fdm)
     R=button(1,U); L=button(-1,U)
     if verbose:
         print(f'plate top: R slope {SLOPE:+.4f} (plate {math.degrees(math.atan(SLOPE)):+.2f} deg to the roof)')

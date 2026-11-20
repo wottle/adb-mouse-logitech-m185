@@ -43,21 +43,29 @@ Holes use the same sizes as the Lisa and Macintosh mice: 2.7 mm pilot, 3.3 mm cl
 
 ## Printed parts
 
-STL files are in [`models/`](models/). Dimensions are the bounding box in the model's
-design orientation (X × Y × Z, mm). The four new parts are in assembled position in one common
-frame (X right, Y toward the buttons, Z up, underside at Z = 0).
+STL files are in [`models/`](models/), in three folders:
+
+| Folder | What |
+|--------|------|
+| [`models/common/`](models/common/) | Buttons, battery door and power slider: the same however you print. |
+| [`models/fdm/`](models/fdm/) | The two shells for **FDM**: flat, parallel sides and a 45° bevel along the top's side edges, so the shells print on their sides without banding or supports outside (see [PRINTING.md](docs/PRINTING.md)). |
+| [`models/resin/`](models/resin/) | The two shells for **resin**: the original G5431's sloping sides and rounded top edges. Everything else matches the FDM shells. |
+
+Print the shells from one of `fdm/` or `resin/`, and everything in `common/`. Dimensions are the
+bounding box in the model's design orientation (X × Y × Z, mm). The new parts are in assembled
+position in one common frame (X right, Y toward the buttons, Z up, underside at Z = 0).
 
 | File | Qty | Size (mm) | Purpose |
 |------|:---:|-----------|---------|
-| `lower_shell.stl` | 1 | 57.0 × 98.5 × 24.2 | Bottom shell. ADB outline (with parallel sides) with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
-| `upper_shell.stl` | 1 | 57.0 × 98.5 × 23.5 | Top shell. The original form and button window, with parallel sides and 45° bevels along the top side edges; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
-| `button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Longer click**: a little free travel before the click. |
-| `button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, longer click. |
-| `button_left_short.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **shorter click**: nub 0.25 mm taller, so it clicks about 0.5 mm sooner at the front edge. Print this pair *or* the pair above. |
-| `button_right_short.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, shorter click. |
-| `on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
-| `battery_cover_1.stl` | 1 | 14.7 × 53.1 × 7.7 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 1.2 mm lower. **Use this one, not the Lisa's** (see Known issues). |
-| `battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
+| `fdm/lower_shell.stl` or `resin/lower_shell.stl` | 1 | 57.0 × 98.5 × 24.2 (resin: 57.4 wide) | Bottom shell. ADB outline with the M185 mounting inside: PCB seats, rear screw boss, front standoff, sensor window, power-switch slot, diagonal AA bay, battery door opening. Flat underside with a 1 mm 45° bevel. |
+| `fdm/upper_shell.stl` or `resin/upper_shell.stl` | 1 | 57.0 × 98.5 × 23.5 (resin: 57.4 wide) | Top shell. The original form and button window; the original button mount and cable ribs are removed, and four bosses under the hump hold the buttons. |
+| `common/button_left.stl` | 1 | 22.2 × 60.4 × 15.1 | Left button: cap, flexing plate, clamp. **Longer click**: a little free travel before the click. |
+| `common/button_right.stl` | 1 | 22.6 × 60.4 × 15.1 | Right button, longer click. |
+| `common/button_left_short.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **shorter click**: nub 0.25 mm taller, so it clicks about 0.5 mm sooner at the front edge. Print this pair *or* the pair above. |
+| `common/button_right_short.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, shorter click. |
+| `common/on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
+| `common/battery_cover_1.stl` | 1 | 14.7 × 53.1 × 7.7 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 1.2 mm lower. **Use this one, not the Lisa's** (see Known issues). |
+| `common/battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
 
 ![Render of the parts](images/preview.png)
 
@@ -95,10 +103,10 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
 - No cable: the cable slot in the front wall is closed.
 - The underside is flat, without the ball opening and feet.
 - The case screws are in the original four corners, now M3.
-- The sides are flat, vertical and parallel, 57.0 mm apart. The original's lean in slightly and narrow
-  toward the front (52–57 mm); parallel sides print without banding when a shell lies on its side.
-- The top's side edges are a 2 mm 45° bevel instead of a curve, so the top prints on its side without
-  supports on the outside.
+- FDM shells only: the sides are flat, vertical and parallel, 57.0 mm apart (the original's lean in
+  slightly and narrow toward the front, 52–57 mm), and the top's side edges are a 2 mm 45° bevel instead
+  of a curve, so the shells print on their sides without banding or outside supports. The resin shells
+  keep the original's sides and edges.
 
 ## Known issues
 
@@ -117,7 +125,7 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
 ## Repository layout
 
 ```
-models/     Print-ready STLs (one per part)
+models/     Print-ready STLs: common/ (both ways), fdm/ and resin/ (the two shells)
 docs/       Printing and assembly instructions
 images/     Renders and the section drawing
 scripts/    build_models.py rebuilds models/ from source/ and runs the fit checks

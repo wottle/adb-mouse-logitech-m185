@@ -3,7 +3,7 @@ from build_top import *
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon as MP
 M=os.path.join(ROOT,'models')+os.sep
-parts={n:to_man(trimesh.load(M+n+'.stl',force='mesh')) for n in ('upper_shell','lower_shell','button_left','button_right')}
+parts={n:to_man(trimesh.load(M+d+'/'+n+'.stl',force='mesh')) for d,n in (('fdm','upper_shell'),('fdm','lower_shell'),('common','button_left'),('common','button_right'))}
 col={'upper_shell':'#c9c9d0','lower_shell':'#a3abbd','button_left':'#e8b860','button_right':'#6f9be0','pcb':'#3c9650','swL':'#d84a3c','swR':'#d84a3c','tact':'#e6aa28','AA':'#4670dc'}
 def yz(Mn,x): return xs_to_shapely(Mn.rotate([0,90,0]).slice(-x))
 def draw(ax,x,title,xlim=(-50,50),ylim=(0,31),pressed=0.0):
