@@ -64,8 +64,8 @@ position in one common frame (X right, Y toward the buttons, Z up, underside at 
 | `common/button_left_long.stl` | (1) | 22.2 × 60.4 × 15.1 | Left button, **longer throw**: about 0.5 mm more travel at the front edge before the click, for a more deliberate press. Print this pair *or* the pair above. |
 | `common/button_right_long.stl` | (1) | 22.6 × 60.4 × 15.1 | Right button, longer throw. |
 | `common/on_off_button.stl` | 1 | 12.0 × 7.2 × 6.0 | Power switch slider. Unchanged from the Lisa mouse. |
-| `common/battery_cover_1.stl` | 1 | 14.7 × 53.1 × 7.7 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 1.2 mm lower. **Use this one, not the Lisa or Macintosh mouse's** (see Known issues). |
-| `common/battery_cover_2.stl` | 1 | 7.5 × 11.8 × 6.2 | Battery door, latch piece. Unchanged from the Lisa mouse. |
+| `common/battery_cover_1.stl` | 1 | 14.7 × 53.1 × 6.4 | Battery door, main plate: the Lisa mouse's, with the saddle that holds the cell 2.4 mm lower and a lower latch box whose roof is shaped to the cell. **Use this one, not the Lisa or Macintosh mouse's** (see Known issues). |
+| `common/battery_cover_2.stl` | 1 | 7.2 × 12.1 × 6.2 | Battery door, latch piece: the Lisa mouse's, with its latch tab moved 0.5 mm deeper (toward the battery) and 0.3 mm longer so it reaches its slot, a thinner arm and a thinner, softer spring. **Use this one** (see Known issues). |
 
 ![Render of the parts](images/preview.png)
 
@@ -114,9 +114,12 @@ that clamp (a flexure, like the original ADB button), so there are no hinge pins
   throw: the click comes almost as soon as you press. The longer-throw pair (`button_left_long.stl`,
   `button_right_long.stl`) has about 0.5 mm more travel at the front edge before the click, for those
   who want each press to be more deliberate.
-- **Battery door.** This mouse's battery door is not the same as the Lisa and Macintosh mice's: its
-  `battery_cover_1.stl` has the battery saddle 1.2 mm lower, to suit this lower-profile shell. Use the
-  one from this repo. The latch piece (`battery_cover_2.stl`) is the same.
+- **Battery door.** This mouse's battery door is not the same as the Lisa and Macintosh mice's, to
+  suit this lower-profile shell. `battery_cover_1.stl` has the battery saddle 2.4 mm lower, and the box
+  the latch slides into is lower with its roof shaped to the cell, so the cell lies level on both. The
+  latch piece `battery_cover_2.stl` has a thinner arm to fit that box, a thinner spring, and its tab
+  moved 0.5 mm deeper, toward the battery, and 0.3 mm longer, so it still reaches its slot.
+  Use both from this repo, as a pair: neither fits the Lisa mouse's other half.
 
 ## Repository layout
 

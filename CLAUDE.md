@@ -66,9 +66,35 @@ openings are identical to the Lisa base, so the Lisa door and slider fit the ope
 
 **Battery door: lower profile.** This shell is lower than the Lisa's, so the cell has less room above it: with a cell
 in, the Lisa door stood about 1.2 mm proud (first print). `build_models.battery_cover_1()` makes the door's main plate
-from `source/lisa/battery_cover_1.stl` with its battery saddle lowered `BATTERY_SUPPORT_DROP` 1.2: everything above
-z 5.0 (print orientation) is the saddle block's top, so those vertices move down and its straight walls shorten. The
-latch piece and the power slider are still copied unchanged (`CARRIED`). Seated in the Lisa base's opening the door
+from `source/lisa/battery_cover_1.stl` with its battery saddle lowered `BATTERY_SUPPORT_DROP` 2.42: everything above
+z 5.5 (print orientation) is the saddle block's top, so those vertices move down and its straight walls shorten. The
+saddle's groove has radius 7.10, so a 14.5 cell sits on its rims: at 2.42 they are at `CELL_Z` 4.0.
+History (Mike's prints): 1.2, closes but won't latch with a cell in; 2.7, flush, but the latch tab only reached the
+fingernail recess's surface; tab moved, latches but the latch end sat low and dragged; 3.4, latches but very tight.
+What all of them had in common: the latch box (the block battery_cover_2's arm slides into; roof top 4.8 over a tunnel
+z 2.0–3.8, y 11.9–19.85 in the door frame) stood under the cell's latch end and held it up (modelled at 3.4: the cell
+tipped 4° and 8 mm³ into the right button). The door also flexes in under the saddle when pressed, so the saddle
+was not the limit. A first fix (2026-11-20) cut the roof away along the cell, leaving only thin lips over the arm; Mike
+preferred a real bridge, so now:
+- `battery_cover_1()` fills the tunnel down to `BOX_TUNNEL_TOP` 3.4 and grooves the box's top with a level cylinder of
+  `CELL_R` at `CELL_Z` (only over door-frame y > 9): a 0.6 bridge in the middle, thicker to its sides, and the cell
+  lies level on the saddle rims and the roof. Door frame (`door_frame()`): plan vertex centroid of the source mesh, +y
+  toward the box.
+- `battery_cover_2()` (profile edits done in the installed section: y along the door, z up; arm on the tunnel floor):
+  arm cut down to `LATCH_ARM_TOP` 3.2 up to `LATCH_ARM_END` 19.95, just past the tunnel's mouth (0.2 play under the
+  roof; the step is filleted 0.3, 3.25 at the mouth); the arch spring thinned `LATCH_ARCH_THIN` 0.3 from its outside
+  (1.2 to 0.9: about 0.4× as stiff; top 6.8 to 6.5). Its underside, the tab and the finger grip don't move.
+- Level at 4.0 (model): 0.65 to the upper shell, right button 0.36 at rest, 0.17 pressed 1.1°, 0.09 at 1.5°. The arch
+  and the tab (top 4.06) still stand under the cell's end; the arch flexes. If it's tight, `CELL_Z` is the one knob
+  (it sets the saddle via `BATTERY_SUPPORT_DROP` = 3.4 − (CELL_Z − 3.02), and the bridge is CELL_Z − 3.4).
+Latch tab: at 2.7 the tab only reached the fingernail recess's surface, so `battery_cover_2()` moves the **tab**
+`LATCH_TAB_SHIFT` 0.5 toward the battery (−x in the print-orientation profile; Mike marked it on the profile drawing).
+The latch is a 6.2 extrusion of a zig-zag profile: the tab (the block above the line (4.44, 10.16)–(5.87, 10.38), in
+profile coordinates from the bounding-box corner) is cut out, lengthened `LATCH_TAB_EXTEND` 0.3 along its own sides
+(64.7°; its top goes from 11.8 to about 12.07), put back 0.5 mm left, and the thin wedge under it filled to the bar.
+Moved 1.0 alone it barely cleared the end of the bar; 1.0 longer was too much; 1.0 deeper and 0.5 longer latched but
+the latch end sat low; now 0.5 deeper and 0.3 longer. Not the arm's length: a first try lengthened the arm, the wrong part.
+Only the power slider is still copied unchanged (`CARRIED`). Seated in the Lisa base's opening the door
 overlaps nothing (checked by matching its plate to the opening's 52.5 × 14.9 step at z 1.5–2).
 
 **Battery bay = Lisa base** (`BAY_MARGIN`, `DOOR_MARGIN`, `WALL_MIN` in `build_lower.py`): within 3 mm of the cell and
@@ -146,7 +172,12 @@ Built 2026-11-19. **Printed 2026-11-20**: prints well, clicks work well (stop sc
   `SW_TOP` (the button rests a little nose-down and still has free play).
 - Short-throw buttons printed: they feel much better, so they are the default (`button_left/right.stl`, `NUB_GAP` 0.0);
   the old standard pair is kept as `_long` for a more deliberate press (Mike). Middle-click switch: far below the
-  left button, nothing rubs on it. Battery door with the lowered saddle: works. Switch positions: confirmed good.
+  left button, nothing rubs on it. Battery door with the saddle 1.2 lower: closes, but with a cell in the latch
+  won't catch (final assembly); saddle 2.7 lower: door
+  flush with a cell in, but the latch tab only reached the fingernail recess's surface; latch tab 1 mm deeper and 0.5 mm
+  longer: latches, but the latch end sat low and dragged. Saddle 3.4 lower, tab 0.5 deeper and 0.3 longer: latches,
+  but very tight (the latch box held the cell up). Now saddle 2.42 lower with the cell level at 4.0 on it and on a
+  lower, bridged latch box; latch arm 1.2 and spring 0.9 thick (a matched pair); not yet printed. Switch positions: confirmed good.
 
 Open items:
 - Print the parallel-sided, bevelled shells (2026-11-20, not printed): upper on its side, check the bed strip holds and
